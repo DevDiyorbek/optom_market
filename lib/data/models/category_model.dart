@@ -1,13 +1,13 @@
 
-class ProductCategory {
+class ProductCategoryModel {
   final int id;
   final String name;
   final String imageUrl;
 
-  ProductCategory({required this.id, required this.name, required this.imageUrl});
+  ProductCategoryModel({required this.id, required this.name, required this.imageUrl});
 
-  factory ProductCategory.fromJson(Map<String, dynamic> json) {
-    return ProductCategory(
+  factory ProductCategoryModel.fromJson(Map<String, dynamic> json) {
+    return ProductCategoryModel(
       id: json['id'],
       name: json['name'],
       imageUrl: json['image_url'],

@@ -1,12 +1,12 @@
 
-class ProductImage {
+class ProductImageModel {
   final int id;
   final String url;
 
-  ProductImage({required this.id, required this.url});
+  ProductImageModel({required this.id, required this.url});
 
-  factory ProductImage.fromJson(Map<String, dynamic> json) {
-    return ProductImage(
+  factory ProductImageModel.fromJson(Map<String, dynamic> json) {
+    return ProductImageModel(
       id: json['id'],
       url: json['url'],
     );

@@ -1,11 +1,11 @@
-class Links {
+class LinksModel {
   final String first;
   final String last;
   final String self;
   final String? next;
   final String? prev;
 
-  Links({
+  LinksModel({
     required this.first,
     required this.last,
     required this.self,
@@ -13,8 +13,8 @@ class Links {
     this.prev,
   });
 
-  factory Links.fromJson(Map<String, dynamic> json) {
-    return Links(
+  factory LinksModel.fromJson(Map<String, dynamic> json) {
+    return LinksModel(
       first: json['first'],
       last: json['last'],
       self: json['self'],

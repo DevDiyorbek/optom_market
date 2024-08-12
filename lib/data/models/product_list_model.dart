@@ -1,14 +1,14 @@
 import 'package:optom_market/data/models/product_model.dart';
 
-class ProductList {
-  final List<Product> items;
+class ProductListModel {
+  final List<ProductModel> items;
   final int total;
   final int page;
   final int size;
   final int pages;
   final ProductListLinks links;
 
-  ProductList({
+  ProductListModel({
     required this.items,
     required this.total,
     required this.page,
@@ -17,11 +17,11 @@ class ProductList {
     required this.links,
   });
 
-  factory ProductList.fromJson(Map<String, dynamic> json) {
+  factory ProductListModel.fromJson(Map<String, dynamic> json) {
     final List<dynamic> productItems = json['items'];
-    final productList = productItems.map((item) => Product.fromJson(item)).toList();
+    final productList = productItems.map((item) => ProductModel.fromJson(item)).toList();
 
-    return ProductList(
+    return ProductListModel(
       items: productList,
       total: json['total'],
       page: json['page'],

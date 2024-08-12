@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:optom_market/data/models/product_model.dart';
 
 class ProductDetails extends StatefulWidget {
-  final Product product;
+  final ProductModel product;
 
   const ProductDetails({super.key, required this.product});
 

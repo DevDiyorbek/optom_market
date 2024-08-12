@@ -1,18 +1,18 @@
 import 'category_model.dart';
 import 'image_model.dart';
 
-class Product {
+class ProductModel {
   final String name;
   final int quantity;
   final String description;
   final double price;
   final int categoryId;
   final int id;
-  final List<ProductImage> images;
-  final ProductCategory category;
+  final List<ProductImageModel> images;
+  final ProductCategoryModel category;
   final int soldQuantity;
 
-  Product({
+  ProductModel({
     required this.name,
     required this.quantity,
     required this.description,
@@ -25,8 +25,8 @@ class Product {
   });
 
   // Factory method to create a Product instance from JSON
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
+  factory ProductModel.fromJson(Map<String, dynamic> json) {
+    return ProductModel(
       name: json['name'],
       quantity: json['quantity'],
       description: json['description'],
@@ -34,9 +34,9 @@ class Product {
       categoryId: json['category_id'],
       id: json['id'],
       images: (json['images'] as List)
-          .map((imageJson) => ProductImage.fromJson(imageJson))
+          .map((imageJson) => ProductImageModel.fromJson(imageJson))
           .toList(),
-      category: ProductCategory.fromJson(json['category']),
+      category: ProductCategoryModel.fromJson(json['category']),
       soldQuantity: json['sold_quantity'],
     );
   }

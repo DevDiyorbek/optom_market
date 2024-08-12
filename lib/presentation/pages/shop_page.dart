@@ -15,7 +15,7 @@ class ShopPage extends StatefulWidget {
 }
 
 class _ShopPageState extends State<ShopPage> {
-  late Future<ProductList> _productList;
+  late Future<ProductListModel> _productList;
 
   @override
   void initState() {
@@ -49,7 +49,7 @@ class _ShopPageState extends State<ShopPage> {
 
                 const SearchWidget(),
                 Expanded(
-                  child: FutureBuilder<ProductList>(
+                  child: FutureBuilder<ProductListModel>(
                     future: _productList,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {

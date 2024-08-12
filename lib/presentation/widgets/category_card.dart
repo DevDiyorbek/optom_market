@@ -3,7 +3,7 @@ import 'package:optom_market/data/models/category_model.dart';
 import 'package:optom_market/presentation/pages/category_products.dart';
 
 Widget categoryCard(
-  ProductCategory category,
+  ProductCategoryModel category,
   BuildContext context,
 ) {
   return GestureDetector(

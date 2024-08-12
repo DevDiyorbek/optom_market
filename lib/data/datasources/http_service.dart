@@ -7,7 +7,7 @@ class ApiService {
   static const String apiUrl = 'https://api.sodiqdev.cloud/';
   static const String apiKey = 'rYKcw1YebNjfxDkVVGkbxDjqCI5ZGRbAdCm4ctCN541QwdZSPBLHSSBva5wOdIgYyVfGbmt3RwtdyDawfAN4o3KMo8i7ubEHibeDB6M6jObgv69MHKTHBnK9c8to1wYn';
 
-  Future<ProductList> fetchProducts() async {
+  Future<ProductListModel> fetchProducts() async {
     try {
       final response = await http.get(
         Uri.parse('${apiUrl}products'),
@@ -19,7 +19,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
-        return ProductList.fromJson(json);
+        return ProductListModel.fromJson(json);
       } else {
         throw Exception('Failed to load products');
       }
@@ -28,7 +28,7 @@ class ApiService {
     }
   }
 
-  Future<List<ProductCategory>> fetchCategories() async {
+  Future<List<ProductCategoryModel>> fetchCategories() async {
     try {
       final response = await http.get(
         Uri.parse('${apiUrl}products/category'),
@@ -40,7 +40,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
-        return jsonList.map((json) => ProductCategory.fromJson(json)).toList();
+        return jsonList.map((json) => ProductCategoryModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load categories');
       }

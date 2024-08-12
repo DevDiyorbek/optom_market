@@ -13,7 +13,7 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage> {
 
-  late Future<List<ProductCategory>> _categoryList;
+  late Future<List<ProductCategoryModel>> _categoryList;
 
   @override
   void initState() {
@@ -48,7 +48,7 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
                 const SearchWidget(),
                 Expanded(
-                  child: FutureBuilder<List<ProductCategory>>(
+                  child: FutureBuilder<List<ProductCategoryModel>>(
                     future: _categoryList,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
