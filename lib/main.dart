@@ -3,10 +3,10 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:optom_market/presentation/config/root_binding.dart';
 import 'package:optom_market/presentation/pages/SamplePage.dart';
 import 'package:optom_market/presentation/pages/home_page.dart';
-import 'package:optom_market/presentation/pages/otp_page.dart';
-import 'package:optom_market/presentation/pages/select_location_page.dart';
+import 'package:optom_market/presentation/pages/auth/otp_page.dart';
+import 'package:optom_market/presentation/pages/auth/select_location_page.dart';
 import 'package:optom_market/presentation/pages/shop_page.dart';
-import 'package:optom_market/presentation/pages/sign_in_page.dart';
+import 'package:optom_market/presentation/pages/auth/sign_in_page.dart';
 
 void main() {
   runApp(const MyApp());

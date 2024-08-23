@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CartPage extends StatefulWidget {
 
-  const CartPage({super.key});
+  const CartPage({super.key, PageController? pageController});
 
   @override
   State<CartPage> createState() => _CartPageState();

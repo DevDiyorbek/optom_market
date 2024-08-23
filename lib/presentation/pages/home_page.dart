@@ -27,16 +27,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final pageController = homeController.pageController;
     return GetBuilder<HomeController>(
       builder: (_){
         return Scaffold(
           body: PageView(
             controller: homeController.pageController,
             children: [
-              ShopPage(pageController: homeController.pageController),
-              ExplorePage(pageController: homeController.pageController),
-              const CartPage(),
-              const AccountPage(),
+              ShopPage(pageController: pageController),
+              ExplorePage(pageController: pageController),
+              CartPage(pageController : pageController),
+              AccountPage(pageController : pageController),
             ],
             onPageChanged: (int index) {
               homeController.changeCurrentTap(index);

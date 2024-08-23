@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:optom_market/presentation/pages/otp_page.dart';
+import 'package:optom_market/presentation/pages/auth/otp_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
