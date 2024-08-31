@@ -12,7 +12,6 @@ class ExplorePage extends StatefulWidget {
 }
 
 class _ExplorePageState extends State<ExplorePage> {
-
   late Future<List<ProductCategoryModel>> _categoryList;
 
   @override
@@ -20,6 +19,7 @@ class _ExplorePageState extends State<ExplorePage> {
     super.initState();
     _categoryList = ApiService().fetchCategories();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -64,7 +64,8 @@ class _ExplorePageState extends State<ExplorePage> {
                       } else {
                         final categoryList = snapshot.data!;
                         return GridView.builder(
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 8.0,
                             mainAxisSpacing: 8.0,

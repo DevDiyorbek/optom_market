@@ -11,6 +11,7 @@ class ApiService {
   static const String token =
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OTg5NDMxMTY2MjQiLCJ1c2VyX2lkIjoxMDIsImV4cCI6MTcyMjg2MjA4NywidG9rZW5fdHlwZSI6ImFjY2VzcyJ9.nPWT97l5BCWRWhNPCS995KLCljG7gQEM4saXJe-RHvI';
 
+
   Future<ProductListModel> fetchProducts() async {
     try {
       final response = await http.get(
@@ -20,7 +21,6 @@ class ApiService {
           'Cookie': 'x-api-key=$apiKey',
         },
       );
-
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
         return ProductListModel.fromJson(json);
@@ -41,7 +41,6 @@ class ApiService {
           'Cookie': 'x-api-key=$apiKey',
         },
       );
-
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
         return jsonList
@@ -52,6 +51,27 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error fetching categories: $e');
+    }
+  }
+
+  Future<ProductListModel> fetchProductsByCategory() async {
+    try {
+      final response = await http.get(
+        Uri.parse('${apiUrl}products?categories=2'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'x-api-key=$apiKey',
+        },
+      );
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(response.body);
+        print(ProductListModel.fromJson(json).toString());
+        return ProductListModel.fromJson(json);
+      } else {
+        throw Exception('Failed to load products');
+      }
+    } catch (e) {
+      throw Exception('Error fetching products: $e');
     }
   }
 
@@ -69,7 +89,6 @@ class ApiService {
       );
 
       if (response.statusCode == 201) {
-        // Order successfully created
         print('Order placed successfully!');
       } else {
         throw Exception(
@@ -79,9 +98,29 @@ class ApiService {
       throw Exception('Error posting order: $e');
     }
   }
+
+  Future<void> loginAuth(String authCode) async {
+    try{
+      final response = await http.post(
+        Uri.parse('${apiUrl}login'),
+        body: {
+          'code' : authCode,
+        },
+        headers: {
+          'Content-Type': 'application/json',
+          
+        }
+      );
+
+    } catch (e) {
+      throw Exception("Error logging in: $e");
+    }
+
+  }
+
 }
 
 void main() {
   ApiService apiService = ApiService();
-  apiService.fetchCategories();
+  apiService.fetchProducts();
 }

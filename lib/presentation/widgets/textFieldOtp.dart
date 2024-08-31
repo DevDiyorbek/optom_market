@@ -9,9 +9,11 @@ class textFieldOTP extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+
       height: 60,
       width: 40,
       child: TextField(
+        keyboardType: TextInputType.number,
         autofocus: true,
         onChanged: (value) {
           if (value.length == 1 && !last) {
@@ -25,7 +27,6 @@ class textFieldOTP extends StatelessWidget {
         readOnly: false,
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-        keyboardType: TextInputType.number,
         maxLength: 1,
         decoration: InputDecoration(
           counter: const Offstage(),

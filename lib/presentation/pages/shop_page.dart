@@ -33,20 +33,29 @@ class _ShopPageState extends State<ShopPage> {
             backgroundColor: Colors.white,
             body: Column(
               children: [
-                const SizedBox(height: 30,),
-                Image.asset('assets/images/logo.png', height: 35,),
+                const SizedBox(
+                  height: 30,
+                ),
+                Image.asset(
+                  'assets/images/logo.png',
+                  height: 35,
+                ),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.location_on),
-                      SizedBox(width: 8.0), // Add some spacing between icon and text
-                      Text("Khorezm, Gurlen", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                      SizedBox(width: 8.0),
+                      Text(
+                        "Khorezm, Gurlen",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
+                      ),
                     ],
                   ),
                 ),
-
                 const SearchWidget(),
                 Expanded(
                   child: FutureBuilder<ProductListModel>(
@@ -55,26 +64,30 @@ class _ShopPageState extends State<ShopPage> {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
-                        return const Center(child: Text('Error loading products'));
+                        return const Center(
+                            child: Text('Error loading products'));
                       } else if (!snapshot.hasData) {
-                        return const Center(child: Text('No products available'));
+                        return const Center(
+                            child: Text('No products available'));
                       } else {
                         final productList = snapshot.data!;
                         // return productCard(productList.items[0], context);
 
                         return ListView.builder(
-                          itemCount: (productList.items.length / 2).ceil(), // Calculate the number of rows
+                          itemCount: (productList.items.length / 2).ceil(),
                           itemBuilder: (context, rowIndex) {
                             final index1 = rowIndex * 2;
                             final index2 = index1 + 1;
                             return Row(
                               children: [
                                 Expanded(
-                                  child: productCard(productList.items[index1], context),
+                                  child: productCard(
+                                      productList.items[index1], context),
                                 ),
                                 if (index2 < productList.items.length)
                                   Expanded(
-                                    child: productCard(productList.items[index2], context),
+                                    child: productCard(
+                                        productList.items[index2], context),
                                   ),
                               ],
                             );

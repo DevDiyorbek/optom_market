@@ -36,7 +36,7 @@ class ProductListLinks {
   final String first;
   final String last;
   final String self;
-  final String next;
+  final String? next;
   final String? prev;
 
   ProductListLinks({

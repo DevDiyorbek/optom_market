@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         'location_page': (context) => const SelectLocationPage(),
         'home_page': (context) => const HomePage(),
       },
-      home: const HomePage()
+      home: const SignInPage()
     );
   }
 }

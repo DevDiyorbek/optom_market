@@ -1,35 +1,30 @@
-class Solution {
-  List productExceptSelf(List<int> nums) {
-    var answer = [];
-    var multiplier = 1;
-    var hasZero = false;
-
-    for (var i = 0; i < nums.length; i++) {
-      if (nums[i] != 0) {
-        multiplier = multiplier * nums[i];
-      } else {
-        hasZero = true;
-      }
-    }
-
-    if (!hasZero) {
-      for (var n = 0; n < nums.length; n++) {
-        answer.add(multiplier ~/ nums[n]);
-      }
-    } else {
-      for (var n = 0; n < nums.length; n++) {
-        if (nums[n] == 0) {
-          answer.add(multiplier);
-        } else {
-          answer.add(0);
-        }
-      }
-    }
-    return answer;
-  }
-}
-
-void main() {
-  Solution solution = Solution();
-  solution.productExceptSelf([-1, 1, 0, -3, 3]);
-}
+// import 'dart:io';
+// class Solution {
+//   List<List<int>> distinctPairs(List<int> numbers) {
+//     final Set<List<int>> uniquePairs = {};
+//
+//     for (int i = 0; i < numbers.length; i++) {
+//       for (int j = i + 1; j < numbers.length; j++) {
+//         // Create a pair (numbers[i], numbers[j])
+//         final pair = [numbers[i], numbers[j]];
+//
+//         // Add the pair to the set (automatically handles duplicates)
+//         uniquePairs.add(pair);
+//       }
+//     }
+//
+//     // Convert the set back to a list
+//     return uniquePairs.toList();
+//   }
+// }
+//
+// void main() {
+//   Solution solution = Solution();
+//   final List<int> inputNumbers = [1, 1, 1, 2];
+//   final List<List<int>> result = solution.distinctPairs(inputNumbers);
+//
+//   print('Distinct Pairs:');
+//   for (final pair in result) {
+//     print(pair);
+//   }
+// }

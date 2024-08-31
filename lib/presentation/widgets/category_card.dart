@@ -21,7 +21,7 @@ Widget categoryCard(
       height: 190,
       decoration: BoxDecoration(
         //53B175
-        color: Colors.greenAccent,
+        color: Color(0xFFC6FFC1),
         borderRadius: BorderRadius.circular(12.0),
         border: Border.all(
           color: Colors.green,
