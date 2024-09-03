@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
 import 'package:optom_market/presentation/widgets/textFieldOtp.dart';
+import '../../../data/datasources/auth_service.dart';
 
 class Otp extends StatefulWidget {
-  const Otp({super.key});
+  const Otp({Key? key}) : super(key: key);
 
   @override
   _OtpState createState() => _OtpState();
 }
 
 class _OtpState extends State<Otp> {
+  final AuthService _authService = AuthService();
+
+  final List<TextEditingController> _controllers =
+      List.generate(6, (index) => TextEditingController());
+
+  String _getOtpCode() {
+    return _controllers.map((controller) => controller.text).join('');
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,9 +51,7 @@ class _OtpState extends State<Otp> {
             padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 10),
             child: Column(
               children: [
-                const SizedBox(
-                  height: 24,
-                ),
+                const SizedBox(height: 24),
                 const Text(
                   'Verification',
                   style: TextStyle(
@@ -42,9 +59,7 @@ class _OtpState extends State<Otp> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
+                const SizedBox(height: 10),
                 const Text(
                   "@auth_bot orqali kodni oling",
                   style: TextStyle(
@@ -54,9 +69,7 @@ class _OtpState extends State<Otp> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 28,
-                ),
+                const SizedBox(height: 28),
                 Container(
                   padding: const EdgeInsets.all(28),
                   decoration: BoxDecoration(
@@ -65,30 +78,31 @@ class _OtpState extends State<Otp> {
                   ),
                   child: Column(
                     children: [
-                      const Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          textFieldOTP(first: true, last: false),
-                          textFieldOTP(first: false, last: false),
-                          textFieldOTP(first: false, last: false),
-                          textFieldOTP(first: false, last: false),
-                          textFieldOTP(first: false, last: false),
-                          textFieldOTP(first: false, last: true),
-                        ],
+                        children: List.generate(6, (index) {
+                          return TextFieldOTP(
+                            controller: _controllers[index],
+                            first: index == 0,
+                            last: index == 5,
+                          );
+                        }),
                       ),
-                      const SizedBox(
-                        height: 22,
-                      ),
+                      const SizedBox(height: 22),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            String otpCode = _getOtpCode();
+                            showCustomSnackbar(context, otpCode);
+                            print("OTP Code: $otpCode");
+                          },
                           style: ButtonStyle(
                             foregroundColor:
-                            MaterialStateProperty.all<Color>(Colors.white),
+                                WidgetStateProperty.all<Color>(Colors.white),
                             backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.purple),
-                            shape: MaterialStateProperty.all<
+                                WidgetStateProperty.all<Color>(Colors.purple),
+                            shape: WidgetStateProperty.all<
                                 RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
@@ -107,9 +121,7 @@ class _OtpState extends State<Otp> {
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                const SizedBox(height: 18),
                 const Text(
                   "Didn't you receive any code?",
                   style: TextStyle(
@@ -119,9 +131,7 @@ class _OtpState extends State<Otp> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                const SizedBox(height: 18),
                 const Text(
                   "Resend New Code",
                   style: TextStyle(

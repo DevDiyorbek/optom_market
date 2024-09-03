@@ -1,35 +1,40 @@
 import 'package:flutter/material.dart';
 
-class textFieldOTP extends StatelessWidget {
+class TextFieldOTP extends StatelessWidget {
   final bool first;
   final bool last;
+  final TextEditingController controller;
 
-  const textFieldOTP({super.key, required this.first, required this.last});
+  const TextFieldOTP({
+    Key? key,
+    required this.controller,
+    required this.first,
+    required this.last,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-
       height: 60,
       width: 40,
       child: TextField(
+        controller: controller,
         keyboardType: TextInputType.number,
-        autofocus: true,
+        autofocus: first, // Only the first field should autofocus
         onChanged: (value) {
           if (value.length == 1 && !last) {
-            FocusScope.of(context).nextFocus();
+            FocusScope.of(context).nextFocus(); // Move to the next field
           }
           if (value.isEmpty && !first) {
-            FocusScope.of(context).previousFocus();
+            FocusScope.of(context).previousFocus(); // Move to the previous field
           }
         },
-        showCursor: false,
-        readOnly: false,
+        showCursor: true, // Show cursor for better user feedback
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         maxLength: 1,
         decoration: InputDecoration(
-          counter: const Offstage(),
+          counterText: '', // Hides the counter text
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(width: 2, color: Colors.black12),
             borderRadius: BorderRadius.circular(10),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:optom_market/data/datasources/auth_service.dart';
 import 'package:optom_market/presentation/pages/auth/otp_page.dart';
-
-import 'auth_functions.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -45,7 +44,7 @@ class SignInPage extends StatelessWidget {
                     ),
                     OutlinedButton(
                       onPressed: () {
-                        navigateToTelegramBot();
+                        AuthService().navigateToTelegramBot();
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => const Otp(),
