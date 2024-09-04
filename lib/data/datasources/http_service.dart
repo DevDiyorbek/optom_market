@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/category_model.dart';
-import '../models/order_model.dart';
 import '../models/product_list_model.dart';
 
 class ApiService {
@@ -71,7 +70,6 @@ class ApiService {
       throw Exception('Error fetching products: $e');
     }
   }
-
 
 }
 

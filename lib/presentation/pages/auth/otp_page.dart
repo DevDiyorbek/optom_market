@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:optom_market/presentation/pages/home_page.dart';
 import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
 import 'package:optom_market/presentation/widgets/textFieldOtp.dart';
+import 'package:optom_market/utility/LogServices.dart';
+import 'package:optom_market/utility/secure_storage.dart';
 import '../../../data/datasources/auth_service.dart';
 
 class Otp extends StatefulWidget {
@@ -80,30 +83,40 @@ class _OtpState extends State<Otp> {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: List.generate(6, (index) {
-                          return TextFieldOTP(
-                            controller: _controllers[index],
-                            first: index == 0,
-                            last: index == 5,
-                          );
-                        }),
+                        children: List.generate(
+                          6,
+                          (index) {
+                            return TextFieldOTP(
+                              controller: _controllers[index],
+                              first: index == 0,
+                              last: index == 5,
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(height: 22),
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => const HomePage(),
+                              ),
+                            );
                             String otpCode = _getOtpCode();
                             showCustomSnackbar(context, otpCode);
-                            print("OTP Code: $otpCode");
+                            _authService.login(otpCode);
+
+
                           },
                           style: ButtonStyle(
                             foregroundColor:
                                 WidgetStateProperty.all<Color>(Colors.white),
                             backgroundColor:
                                 WidgetStateProperty.all<Color>(Colors.purple),
-                            shape: WidgetStateProperty.all<
-                                RoundedRectangleBorder>(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
 
 class AuthService {
@@ -12,25 +13,45 @@ class AuthService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: json.encode({"code": code}),
       );
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+
+        final user = data['user'];
         final accessToken = data['data']['access_token'];
         final refreshToken = data['data']['refresh_token'];
 
+        await _secureStorage.saveUserData(
+          firstName: user['first_name'],
+          phoneNumber: user['phone_number'],
+          username: user['username'],
+          lastName: user['last_name'],
+          image: user['image'],
+        );
         await _secureStorage.write('access_token', accessToken);
         await _secureStorage.write('refresh_token', refreshToken);
 
         print('Login successful');
+        String? nameUser = await _secureStorage.read('first_name');
+
+        LogService.w('Name of the user is : $nameUser');
       } else {
         print('Login failed: ${response.body}');
       }
     } catch (e) {
       print('Error during login: $e');
     }
+  }
+
+  Future<void> logout() async {
+    await _secureStorage.delete('access_token');
+    await _secureStorage.delete('refresh_token');
+    print('User logged out.');
   }
 
   Future<void> refreshAccessToken() async {
@@ -94,17 +115,11 @@ class AuthService {
     }
   }
 
-  Future<void> logout() async {
-    await _secureStorage.delete('access_token');
-    await _secureStorage.delete('refresh_token');
-    print('User logged out.');
-  }
 
   bool isTokenExpired(String token) {
     // Implement logic to check if the token is expired
     return false; // Placeholder; implement your expiration logic if needed
   }
-
 
   void navigateToTelegramBot() async {
     const telegramUrl = 'https://t.me/MusicLyricsSSbot';
@@ -115,4 +130,6 @@ class AuthService {
       throw 'Could not launch $telegramUrl';
     }
   }
+
+
 }
