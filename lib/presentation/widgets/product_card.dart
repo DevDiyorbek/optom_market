@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:optom_market/data/models/product_model.dart';
-import 'package:optom_market/presentation/pages/product_details.dart';
+import 'package:optom_market/presentation/pages/shop_pages/product_details.dart';
 
 Widget productCard(
     ProductModel product,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:optom_market/data/datasources/auth_service.dart';
-import 'package:optom_market/presentation/pages/auth/otp_page.dart';
+
+import 'otp_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -49,7 +50,7 @@ class SignInPage extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => const Otp(),
                           ),
-                          );
+                        );
                       },
                       style: ButtonStyle(
                         backgroundColor:

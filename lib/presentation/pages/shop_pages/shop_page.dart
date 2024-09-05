@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:optom_market/presentation/widgets/product_card.dart';
 import 'package:optom_market/presentation/widgets/search_widget.dart';
 
-import '../../data/datasources/http_service.dart';
-import '../../data/models/product_list_model.dart';
+import '../../../data/datasources/http_service.dart';
+import '../../../data/models/product_list_model.dart';
 
 class ShopPage extends StatefulWidget {
   final PageController? pageController;

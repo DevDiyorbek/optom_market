@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:optom_market/presentation/pages/account_page.dart';
-import 'package:optom_market/presentation/pages/cart_page.dart';
-import 'package:optom_market/presentation/pages/explore_page.dart';
-import 'package:optom_market/presentation/pages/shop_page.dart';
+import 'package:optom_market/presentation/pages/account_pages/account_page.dart';
+import 'package:optom_market/presentation/pages/cart_pages/cart_page.dart';
+import 'package:optom_market/presentation/pages/explore_pages/explore_page.dart';
+import 'package:optom_market/presentation/pages/shop_pages/shop_page.dart';
 
 import '../controllers/home_controller.dart';
 class HomePage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:optom_market/data/models/category_model.dart';
-import '../../data/datasources/http_service.dart';
-import '../widgets/category_card.dart';
-import '../widgets/search_widget.dart';
+import '../../../data/datasources/http_service.dart';
+import '../../widgets/category_card.dart';
+import '../../widgets/search_widget.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({super.key, PageController? pageController});

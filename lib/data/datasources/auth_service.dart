@@ -37,9 +37,9 @@ class AuthService {
         await _secureStorage.write('refresh_token', refreshToken);
 
         print('Login successful');
-        String? nameUser = await _secureStorage.read('first_name');
+        String? image = await _secureStorage.read('image');
 
-        LogService.w('Name of the user is : $nameUser');
+        LogService.w('Name of the user is : $image');
       } else {
         print('Login failed: ${response.body}');
       }

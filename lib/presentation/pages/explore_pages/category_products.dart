@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:optom_market/data/models/category_model.dart';
 
-import '../../data/datasources/http_service.dart';
-import '../../data/models/product_list_model.dart';
-import '../widgets/product_card.dart';
+import '../../../data/datasources/http_service.dart';
+import '../../../data/models/product_list_model.dart';
+import '../../widgets/product_card.dart';
 
 class CategoryProducts extends StatefulWidget {
   final ProductCategoryModel category;
