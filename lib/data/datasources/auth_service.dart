@@ -51,6 +51,7 @@ class AuthService {
   Future<void> logout() async {
     await _secureStorage.delete('access_token');
     await _secureStorage.delete('refresh_token');
+
     print('User logged out.');
   }
 

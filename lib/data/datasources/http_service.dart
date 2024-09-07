@@ -50,7 +50,7 @@ class ApiService {
     }
   }
 
-  Future<ProductListModel> fetchProductsByCategory() async {
+  Future<ProductListModel> fetchProductsByCategory(int categoryId) async {
     try {
       final response = await http.get(
         Uri.parse('${apiUrl}products?categories=2'),

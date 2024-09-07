@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:optom_market/data/models/product_model.dart';
+import '../../controllers/product_details_controller.dart';
 
-class ProductDetails extends StatefulWidget {
+class ProductDetails extends StatelessWidget {
   final ProductModel product;
 
   const ProductDetails({super.key, required this.product});
 
   @override
-  State<ProductDetails> createState() => _ProductDetailsState();
-}
-
-class _ProductDetailsState extends State<ProductDetails> {
-  var productQuantity = 1;
-
-  @override
   Widget build(BuildContext context) {
+    final ProductDetailsController productDetailsController = Get.put(ProductDetailsController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -43,8 +39,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ),
               ),
               child: Image.network(
-                widget.product.images.isNotEmpty
-                    ? widget.product.images.first.url
+                product.images.isNotEmpty
+                    ? product.images.first.url
                     : 'https://via.placeholder.com/100',
                 width: 100,
                 height: 100,
@@ -63,7 +59,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.product.name,
+                    product.name,
                     style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -73,14 +69,12 @@ class _ProductDetailsState extends State<ProductDetails> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      Obx(() => Row(
                         children: [
                           IconButton(
                             icon: const Icon(Icons.remove),
                             onPressed: () {
-                              setState((){
-                                productQuantity--;
-                              });
+                              productDetailsController.decreaseQuantity();
                             },
                           ),
                           Container(
@@ -95,25 +89,23 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 Radius.circular(15),
                               ),
                             ),
-                            child: Text(productQuantity.toString()),
+                            child: Text(productDetailsController.productQuantity.toString()),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add),
                             onPressed: () {
-                              setState((){
-                                productQuantity++;
-                              });
+                              productDetailsController.increaseQuantity();
                             },
                           ),
                         ],
-                      ),
-                      Text(
-                        "${(widget.product.price*productQuantity).toStringAsFixed(2)} so'm",
+                      )),
+                      Obx(() => Text(
+                        "${(product.price * productDetailsController.productQuantity.value).toStringAsFixed(2)} so'm",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                      ),
+                      )),
                     ],
                   ),
                   const SizedBox(height: 40.0),
@@ -129,7 +121,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           color: Colors.black87,
                         ),
                       ),
-                      Text(widget.product.description)
+                      Text(product.description)
                     ],
                   ),
                   const SizedBox(height: 40.0),

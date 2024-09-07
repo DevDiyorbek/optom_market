@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../../controllers/filters_page_controller.dart';
 
 class Filters extends StatelessWidget {
   const Filters({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final FiltersController filtersController =
+        Get.put(FiltersController()); // Initialize the controller
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Filters'),
+        title: const Text('Filters'),
         leading: IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () {
-            // Handle back button press
+            Get.back(); // Use GetX to go back
           },
         ),
       ),
@@ -30,54 +36,72 @@ class Filters extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Filter categories (CheckboxListTile widgets)
-              CheckboxListTile(
-                title: Text('Eggs'),
-                value: true, // Set to true for selected category
-                onChanged: (newValue) {
-                  // Handle category selection
-                },
-              ),
-              CheckboxListTile(
-                title: Text('Noodles & Pasta'),
-                value: false,
-                onChanged: (newValue) {
-                  // Handle category selection
-                },
+              // Checkbox to select Egg option
+              Obx(() => CheckboxListTile(
+                    title: const Text('Eggs'),
+                    value: filtersController.isEggsSelected.value,
+                    onChanged: (newValue) {
+                      filtersController.isEggsSelected.value =
+                          newValue ?? false; // Update the selected value
+                    },
+                  )),
+              Obx(() => CheckboxListTile(
+                    title: const Text('Noodles & Pasta'),
+                    value: filtersController.isNoodlesSelected.value,
+                    onChanged: (newValue) {
+                      filtersController.isNoodlesSelected.value =
+                          newValue ?? false; // Update the selected value
+                    },
+                  )),
+
+              const Text(
+                "Price",
+                style: TextStyle(fontSize: 30),
               ),
 
-              const Text("Price", style: TextStyle(fontSize: 30),),
-
-
-              TextField(
-                decoration: InputDecoration(hintText: 'dan'),
-              ),
-              TextField(
-                decoration: InputDecoration(hintText: 'gacha'),
-              ),
-              // Order by radio buttons (RadioListTile widgets)
-              RadioListTile(
-                title: Text('Order by name'),
-                value: 'name',
-                groupValue: 'name', // Set to the selected value
-                onChanged: (value) {
-                  // Handle radio button selection
-                },
-              ),
-              RadioListTile(
-                title: Text('Order by price'),
-                value: 'price',
-                groupValue: 'name', // Set to the selected value
-                onChanged: (value) {
-                  // Handle radio button selection
-                },
-              ),
+              // Minimum Price TextField
+              Obx(() => TextField(
+                    decoration: const InputDecoration(hintText: 'Min Price'),
+                    onChanged: (value) {
+                      filtersController.minPrice.value =
+                          value; // Update min price
+                    },
+                  )),
+              // Maximum Price TextField
+              Obx(() => TextField(
+                    decoration: const InputDecoration(hintText: 'Max Price'),
+                    onChanged: (value) {
+                      filtersController.maxPrice.value =
+                          value; // Update max price
+                    },
+                  )),
+              // Order by radio buttons
+              Obx(() => RadioListTile(
+                    title: const Text('Order by name'),
+                    value: 'name',
+                    groupValue: filtersController.selectedOrderBy.value,
+                    // Set to the selected value
+                    onChanged: (value) {
+                      filtersController.selectedOrderBy.value =
+                          value.toString();
+                    },
+                  )),
+              Obx(() => RadioListTile(
+                    title: const Text('Order by price'),
+                    value: 'price',
+                    groupValue: filtersController.selectedOrderBy.value,
+                    // Set to the selected value
+                    onChanged: (value) {
+                      filtersController.selectedOrderBy.value =
+                          value.toString();
+                    },
+                  )),
               // Apply Filter button
               ElevatedButton(
                 onPressed: () {
-                  // Handle Apply Filter button press
+                  filtersController.applyFilters(); // Call apply filters method
                 },
-                child: Text('Apply Filter'),
+                child: const Text('Apply Filter'),
               ),
             ],
           ),

@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:optom_market/data/models/category_model.dart';
-import '../../../data/datasources/http_service.dart';
+import 'package:get/get.dart';
 import '../../widgets/category_card.dart';
 import '../../widgets/search_widget.dart';
+import '../../controllers/explore_page_controller.dart';
 
-class ExplorePage extends StatefulWidget {
-  const ExplorePage({super.key, PageController? pageController});
-
-  @override
-  State<ExplorePage> createState() => _ExplorePageState();
-}
-
-class _ExplorePageState extends State<ExplorePage> {
-  late Future<List<ProductCategoryModel>> _categoryList;
-
-  @override
-  void initState() {
-    super.initState();
-    _categoryList = ApiService().fetchCategories();
-  }
+class ExplorePage extends StatelessWidget {
+  const ExplorePage({super.key, this.pageController});
+  final PageController? pageController;
 
   @override
   Widget build(BuildContext context) {
+    final ExplorePageController exploreController =
+        Get.put(ExplorePageController()); // Initialize the controller
+
     return SafeArea(
       child: Center(
         child: Container(
@@ -48,37 +39,30 @@ class _ExplorePageState extends State<ExplorePage> {
                 ),
                 const SearchWidget(),
                 Expanded(
-                  child: FutureBuilder<List<ProductCategoryModel>>(
-                    future: _categoryList,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return const Center(
-                          child: Text('Error loading products'),
-                        );
-                      } else if (!snapshot.hasData) {
-                        return const Center(
-                          child: Text('No products available'),
-                        );
-                      } else {
-                        final categoryList = snapshot.data!;
-                        return GridView.builder(
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
-                          ),
-                          itemCount: categoryList.length,
-                          itemBuilder: (context, index) {
-                            final category = categoryList[index];
-                            return categoryCard(category, context);
-                          },
-                        );
-                      }
-                    },
-                  ),
+                  child: Obx(() {
+                    if (exploreController.isLoading.value) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (exploreController.categoryList.isEmpty) {
+                      return const Center(
+                        child: Text('No products available'),
+                      );
+                    } else {
+                      return GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                        ),
+                        itemCount: exploreController.categoryList.length,
+                        itemBuilder: (context, index) {
+                          final category =
+                              exploreController.categoryList[index];
+                          return categoryCard(category, context);
+                        },
+                      );
+                    }
+                  }),
                 ),
               ],
             ),
