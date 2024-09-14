@@ -17,7 +17,7 @@ class _OtpState extends State<Otp> {
   final AuthService _authService = AuthService();
 
   final List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+  List.generate(6, (index) => TextEditingController());
 
   String _getOtpCode() {
     return _controllers.map((controller) => controller.text).join('');
@@ -85,7 +85,7 @@ class _OtpState extends State<Otp> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: List.generate(
                           6,
-                          (index) {
+                              (index) {
                             return TextFieldOTP(
                               controller: _controllers[index],
                               first: index == 0,
@@ -112,11 +112,11 @@ class _OtpState extends State<Otp> {
                           },
                           style: ButtonStyle(
                             foregroundColor:
-                                WidgetStateProperty.all<Color>(Colors.white),
+                            WidgetStateProperty.all<Color>(Colors.white),
                             backgroundColor:
-                                WidgetStateProperty.all<Color>(Colors.purple),
+                            WidgetStateProperty.all<Color>(Colors.purple),
                             shape:
-                                WidgetStateProperty.all<RoundedRectangleBorder>(
+                            WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

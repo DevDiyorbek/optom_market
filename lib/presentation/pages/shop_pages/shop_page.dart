@@ -24,7 +24,8 @@ class ShopPage extends StatelessWidget {
                 const SizedBox(height: 30),
                 Image.asset('assets/images/logo.png', height: 35),
                 const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -32,44 +33,54 @@ class ShopPage extends StatelessWidget {
                       SizedBox(width: 8.0),
                       Text(
                         "Khorezm, Gurlen",
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                     ],
                   ),
                 ),
                 const SearchWidget(),
                 Expanded(
-                  child: Obx(() {
-                    if (shopController.isLoading.value) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (shopController.productList.isEmpty) {
-                      return const Center(child: Text('No products available'));
-                    } else {
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          shopController.refreshProducts();
-                        },
-                        child: ListView.builder(
-                          itemCount: (shopController.productList.length / 2).ceil(),
-                          itemBuilder: (context, rowIndex) {
-                            final index1 = rowIndex * 2;
-                            final index2 = index1 + 1;
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: productCard(shopController.productList[index1], context),
-                                ),
-                                if (index2 < shopController.productList.length)
-                                  Expanded(
-                                    child: productCard(shopController.productList[index2], context),
-                                  ),
-                              ],
-                            );
+                  child: Obx(
+                    () {
+                      if (shopController.isLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (shopController.productList.isEmpty) {
+                        return const Center(
+                            child: Text('No products available'));
+                      } else {
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            shopController.refreshProducts();
                           },
-                        ),
-                      );
-                    }
-                  }),
+                          child: ListView.builder(
+                            itemCount:
+                                (shopController.productList.length / 2).ceil(),
+                            itemBuilder: (context, rowIndex) {
+                              final index1 = rowIndex * 2;
+                              final index2 = index1 + 1;
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: productCard(
+                                        shopController.productList[index1],
+                                        context),
+                                  ),
+                                  if (index2 <
+                                      shopController.productList.length)
+                                    Expanded(
+                                      child: productCard(
+                                          shopController.productList[index2],
+                                          context),
+                                    ),
+                                ],
+                              );
+                            },
+                          ),
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),

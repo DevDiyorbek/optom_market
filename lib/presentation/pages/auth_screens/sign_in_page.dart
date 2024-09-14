@@ -1,10 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart'; // Add this import
 import 'package:optom_market/data/datasources/auth_service.dart';
 
 import 'otp_page.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
+  bool _navigatedToOtp = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && !_navigatedToOtp) {
+      // App was resumed, check if we should navigate to OTP page
+      setState(() {
+        _navigatedToOtp = true;
+      });
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => const Otp(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +62,10 @@ class SignInPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const Text(
-                      "Welcome to optom",
+                      textAlign: TextAlign.center,
+                      "Welcome to \nOptom Market",
                       style: TextStyle(
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontSize: 40,
                       ),
@@ -44,13 +81,8 @@ class SignInPage extends StatelessWidget {
                       height: 20,
                     ),
                     OutlinedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         AuthService().navigateToTelegramBot();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const Otp(),
-                          ),
-                        );
                       },
                       style: ButtonStyle(
                         backgroundColor:
@@ -62,10 +94,9 @@ class SignInPage extends StatelessWidget {
                         children: [
                           Image.asset(
                             "assets/images/telegram_logo.png",
-                            height: 40,
+                            height: 30,
                           ),
                           const SizedBox(width: 8),
-                          // Add some spacing between the image and text
                           const Text(
                             "Telegram orqali kirish",
                             style: TextStyle(color: Colors.blue),

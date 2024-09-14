@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:optom_market/data/models/product_model.dart';
+import 'package:optom_market/data/datasources/cart_service.dart';
+import 'package:optom_market/presentation/controllers/cart_controller.dart';
+import '../../../data/models/product_model.dart';
 import '../../controllers/product_details_controller.dart';
 
 class ProductDetails extends StatelessWidget {
   final ProductModel product;
-
   const ProductDetails({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
-    final ProductDetailsController productDetailsController = Get.put(ProductDetailsController());
+    Get.create<ProductDetailsController>(() => ProductDetailsController());
+    final ProductDetailsController productDetailsController =
+        Get.find<ProductDetailsController>();
+    final cartController = Get.put(CartController());
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -69,43 +73,61 @@ class ProductDetails extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Obx(() => Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.remove),
-                            onPressed: () {
-                              productDetailsController.decreaseQuantity();
-                            },
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(
-                                left: 15, top: 10, right: 15, bottom: 10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.black,
-                                width: 1.0,
+                      Obx(
+                        () => Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(
+                                Icons.remove,
                               ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(15),
+                              color: productDetailsController
+                                          .productQuantity.value >
+                                      1
+                                  ? Colors
+                                      .green // Change color to green if quantity is greater than 1
+                                  : Colors.grey,
+                              // Change color to grey if quantity is 1
+                              onPressed: () {
+                                productDetailsController.decreaseQuantity();
+                              },
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(
+                                  left: 15, top: 10, right: 15, bottom: 10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 1.0,
+                                ),
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(15),
+                                ),
+                              ),
+                              child: Text(
+                                productDetailsController.productQuantity.value
+                                    .toString(),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            child: Text(productDetailsController.productQuantity.toString()),
-                          ),
-                          IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: () {
-                              productDetailsController.increaseQuantity();
-                            },
-                          ),
-                        ],
-                      )),
-                      Obx(() => Text(
-                        "${(product.price * productDetailsController.productQuantity.value).toStringAsFixed(2)} so'm",
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                            IconButton(
+                              icon: const Icon(Icons.add),
+                              color: Colors.green,
+                              // Always set this to green
+                              onPressed: () {
+                                productDetailsController.increaseQuantity();
+                              },
+                            ),
+                          ],
                         ),
-                      )),
+                      ),
+                      Obx(() => Text(
+                            "${(product.price * productDetailsController.productQuantity.value).toStringAsFixed(2)} so'm",
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )),
                     ],
                   ),
                   const SizedBox(height: 40.0),
@@ -130,7 +152,7 @@ class ProductDetails extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.only(bottom: 35),
                       alignment: Alignment.bottomCenter,
-                      child: Container(
+                      child: SizedBox(
                         height: 50,
                         width: double.infinity,
                         child: ElevatedButton(
@@ -138,8 +160,14 @@ class ProductDetails extends StatelessWidget {
                             alignment: AlignmentDirectional.centerStart,
                             backgroundColor: const Color(0xFF37C537),
                           ),
-                          onPressed: () {
-                            // Handle "Add to Cart" button press
+                          onPressed: () async {
+                            int productId = product.id;
+                            int quantity =
+                                productDetailsController.productQuantity.value;
+                            await CartService()
+                                .addProductToCart(productId, quantity);
+                            cartController.refreshCartItems();
+                            Navigator.pop(context);
                           },
                           child: Container(
                             padding: const EdgeInsets.only(left: 16),

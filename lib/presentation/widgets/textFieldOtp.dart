@@ -6,11 +6,11 @@ class TextFieldOTP extends StatelessWidget {
   final TextEditingController controller;
 
   const TextFieldOTP({
-    Key? key,
+    super.key,
     required this.controller,
     required this.first,
     required this.last,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
-
+import 'package:url_launcher/url_launcher_string.dart';
 import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
 
@@ -21,24 +20,22 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-
         final user = data['user'];
         final accessToken = data['data']['access_token'];
         final refreshToken = data['data']['refresh_token'];
 
-        await _secureStorage.saveUserData(
+        await _secureStorage.saveUserAndTokenData(
           firstName: user['first_name'],
           phoneNumber: user['phone_number'],
           username: user['username'],
           lastName: user['last_name'],
           image: user['image'],
+          accessToken: accessToken,
+          refreshToken: refreshToken,
         );
-        await _secureStorage.write('access_token', accessToken);
-        await _secureStorage.write('refresh_token', refreshToken);
 
         print('Login successful');
         String? image = await _secureStorage.read('image');
-
         LogService.w('Name of the user is : $image');
       } else {
         print('Login failed: ${response.body}');
@@ -87,36 +84,6 @@ class AuthService {
     }
   }
 
-  Future<void> makeAuthenticatedRequest() async {
-    String? accessToken = await _secureStorage.read('access_token');
-
-    if (accessToken == null || isTokenExpired(accessToken)) {
-      await refreshAccessToken();
-      accessToken = await _secureStorage.read('access_token');
-    }
-
-    if (accessToken != null) {
-      try {
-        final response = await http.get(
-          Uri.parse('$baseUrl/protected-resource'),
-          headers: {'Authorization': 'Bearer $accessToken'},
-        );
-
-        if (response.statusCode == 200) {
-          print('Access granted, data: ${response.body}');
-        } else {
-          print('Failed to access protected resource: ${response.body}');
-          if (response.statusCode == 401) {
-            logout();
-          }
-        }
-      } catch (e) {
-        print('Error during request: $e');
-      }
-    }
-  }
-
-
   bool isTokenExpired(String token) {
     // Implement logic to check if the token is expired
     return false; // Placeholder; implement your expiration logic if needed
@@ -125,12 +92,10 @@ class AuthService {
   void navigateToTelegramBot() async {
     const telegramUrl = 'https://t.me/MusicLyricsSSbot';
 
-    if (await canLaunch(telegramUrl)) {
-      await launch(telegramUrl);
+    if (await canLaunchUrlString(telegramUrl)) {
+      await launchUrlString(telegramUrl);
     } else {
       throw 'Could not launch $telegramUrl';
     }
   }
-
-
 }

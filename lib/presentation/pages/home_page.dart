@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:optom_market/presentation/controllers/cart_controller.dart';
 import 'package:optom_market/presentation/pages/account_pages/account_page.dart';
 import 'package:optom_market/presentation/pages/cart_pages/cart_page.dart';
 import 'package:optom_market/presentation/pages/explore_pages/explore_page.dart';
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final pageController = homeController.pageController;
+    final cartController = Get.put(CartController());
     return GetBuilder<HomeController>(
       builder: (_){
         return Scaffold(
@@ -41,6 +43,9 @@ class _HomePageState extends State<HomePage> {
             ],
             onPageChanged: (int index) {
               homeController.changeCurrentTap(index);
+              if (index == 3) {
+                cartController.refreshCartItems(); // Add this line
+              }
             },
           ),
           bottomNavigationBar: CupertinoTabBar(

@@ -8,10 +8,9 @@ Widget productCard(
     ) {
   return GestureDetector(
     onTap: () {
-      // Navigate to ProductDetails screen when the card is pressed
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProductDetails(product:product), // Pass the product to the details screen
+          builder: (context) => ProductDetails(product:product),
         ),
       );
     },
