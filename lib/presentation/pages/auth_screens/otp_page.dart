@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:optom_market/presentation/pages/home_page.dart';
 import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
 import 'package:optom_market/presentation/widgets/textFieldOtp.dart';
-import 'package:optom_market/utility/LogServices.dart';
-import 'package:optom_market/utility/secure_storage.dart';
 import '../../../data/datasources/auth_service.dart';
 
 class Otp extends StatefulWidget {
@@ -36,14 +34,14 @@ class _OtpState extends State<Otp> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 24,
-            color: Colors.black54,
-          ),
-        ),
+        // leading: GestureDetector(
+        //   onTap: () => Navigator.pop(context),
+        //   child: const Icon(
+        //     Icons.arrow_back_ios_new_rounded,
+        //     size: 24,
+        //     color: Colors.black54,
+        //   ),
+        // ),
         backgroundColor: Colors.white,
         title: const Text('Verification'),
       ),
@@ -63,14 +61,17 @@ class _OtpState extends State<Otp> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Text(
-                  "@auth_bot orqali kodni oling",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
+                GestureDetector(
+                  onTap: AuthService().navigateToTelegramBot,
+                  child: const Text(
+                    "@auth_bot orqali kodni oling",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black38,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 28),
                 Container(
@@ -105,10 +106,7 @@ class _OtpState extends State<Otp> {
                               ),
                             );
                             String otpCode = _getOtpCode();
-                            showCustomSnackbar(context, otpCode);
                             _authService.login(otpCode);
-
-
                           },
                           style: ButtonStyle(
                             foregroundColor:

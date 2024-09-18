@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:optom_market/data/datasources/cart_service.dart';
 import 'package:optom_market/presentation/controllers/cart_controller.dart';
+import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
 import '../../../data/models/product_model.dart';
 import '../../controllers/product_details_controller.dart';
 
@@ -162,11 +163,10 @@ class ProductDetails extends StatelessWidget {
                           ),
                           onPressed: () async {
                             int productId = product.id;
-                            int quantity =
-                                productDetailsController.productQuantity.value;
-                            await CartService()
-                                .addProductToCart(productId, quantity);
+                            int quantity = productDetailsController.productQuantity.value;
+                            await CartService().addProductToCart(productId, quantity);
                             cartController.refreshCartItems();
+                            showCustomSnackbar(context, "${product.name} added to cart successfully");
                             Navigator.pop(context);
                           },
                           child: Container(

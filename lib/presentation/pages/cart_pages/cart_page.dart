@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:optom_market/data/datasources/order_service.dart';
-
+import 'package:optom_market/utility/secure_storage.dart';
 import '../../controllers/cart_controller.dart';
 import '../../widgets/cart_item.dart';
+import 'checkout_widget.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({super.key, PageController? pageController});
 
   @override
   Widget build(BuildContext context) {
-    final OrderService orderService = OrderService();
     final CartController cartController = Get.put(CartController());
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -31,7 +31,6 @@ class CartPage extends StatelessWidget {
                 ),
               ),
               const Divider(),
-
               Expanded(
                 child: RefreshIndicator(
                   onRefresh: () async {
@@ -45,14 +44,15 @@ class CartPage extends StatelessWidget {
                         itemCount: cartController.cartItems.length,
                         itemBuilder: (context, index) {
                           final cartItem = cartController.cartItems[index];
-                          return CartItemWidget(cartItem: cartItem, cartController: cartController); // Pass it here
+                          return CartItemWidget(
+                              cartItem: cartItem,
+                              cartController: cartController);
                         },
                       );
                     }
                   }),
                 ),
               ),
-
               Container(
                 padding: const EdgeInsets.symmetric(
                     vertical: 16.0, horizontal: 20.0),
@@ -62,13 +62,57 @@ class CartPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          orderService.sendOrders(shippingAddress: "Uchlola");
-                          // Handle checkout action
+                        onPressed: () async {
+                          // Show a loading indicator.
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return const Center(
+                                  child: CircularProgressIndicator());
+                            },
+                          );
+
+                          // Fetch the initial address asynchronously
+                          String initialAddress;
+                          try {
+                            initialAddress = await cartController.getInitialAddress();
+                          } catch (e) {
+                            initialAddress =''; // Default to empty if there's an error
+                            print("Error fetching address: $e");
+                          }
+
+                          // Dismiss the loading indicator
+                          Navigator.pop(context);
+
+                          // Show the bottom sheet with the fetched address
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (BuildContext context) {
+                              double totalPrice =
+                                  cartController.calculateTotalPrice();
+                              return Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(30),
+                                    topRight: Radius.circular(30),
+                                  ),
+                                ),
+                                height:
+                                    MediaQuery.of(context).size.height * 2 / 3,
+                                child: CheckoutWidget(
+                                  initialTotalCost: totalPrice,
+                                  initialDeliveryAddress: initialAddress,
+                                ),
+                              );
+                            },
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
-                          // Change color as needed
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: const Text(
@@ -80,24 +124,31 @@ class CartPage extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Total Price Text
-                    Obx(() {
-                      double totalPrice = cartController.cartItems.fold(
-                        0.0,(sum, item) =>
-                        sum + (item.itemCost * item.quantity), // Make sure to get the current quantity
-                      );
-                      return Padding(
-                        padding: const EdgeInsets.only(left: 16.0),
-                        child: Text(
-                          '\$${totalPrice.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                    Obx(
+                      () {
+                        double totalPrice =
+                            cartController.calculateTotalPrice();
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                totalPrice.toStringAsFixed(2),
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Text(
+                                "so'm",
+                                style: TextStyle(fontSize: 16),
+                              )
+                            ],
                           ),
-                        ),
-                      );
-                    }),
-
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

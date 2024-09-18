@@ -7,11 +7,10 @@ class ApiService {
   static const String apiUrl = 'https://api.sodiqdev.cloud/';
   static const String apiKey = 'rYKcw1YebNjfxDkVVGkbxDjqCI5ZGRbAdCm4ctCN541QwdZSPBLHSSBva5wOdIgYyVfGbmt3RwtdyDawfAN4o3KMo8i7ubEHibeDB6M6jObgv69MHKTHBnK9c8to1wYn';
 
-
-  Future<ProductListModel> fetchProducts() async {
+  Future<ProductListModel> fetchProducts(int page) async {
     try {
       final response = await http.get(
-        Uri.parse('${apiUrl}products'),
+        Uri.parse('${apiUrl}products/?page=$page'),
         headers: {
           'Content-Type': 'application/json',
           'Cookie': 'x-api-key=$apiKey',
@@ -53,7 +52,7 @@ class ApiService {
   Future<ProductListModel> fetchProductsByCategory(int categoryId) async {
     try {
       final response = await http.get(
-        Uri.parse('${apiUrl}products?categories=2'),
+        Uri.parse('${apiUrl}products?categories=$categoryId'),
         headers: {
           'Content-Type': 'application/json',
           'Cookie': 'x-api-key=$apiKey',
@@ -73,7 +72,3 @@ class ApiService {
 
 }
 
-void main() {
-  ApiService apiService = ApiService();
-  apiService.fetchProducts();
-}

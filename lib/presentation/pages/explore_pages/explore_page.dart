@@ -10,9 +10,7 @@ class ExplorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ExplorePageController exploreController =
-        Get.put(ExplorePageController()); // Initialize the controller
-
+    final ExplorePageController exploreController = Get.put(ExplorePageController());
     return SafeArea(
       child: Center(
         child: Container(
@@ -56,8 +54,7 @@ class ExplorePage extends StatelessWidget {
                         ),
                         itemCount: exploreController.categoryList.length,
                         itemBuilder: (context, index) {
-                          final category =
-                              exploreController.categoryList[index];
+                          final category = exploreController.categoryList[index];
                           return categoryCard(category, context);
                         },
                       );

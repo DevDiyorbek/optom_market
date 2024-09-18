@@ -39,7 +39,7 @@ class UserInfo {
   final String? lastName;
   final String phoneNumber;
   final int telegramId;
-  final String username;
+  final String? username;
 
   UserInfo({
     required this.firstName,

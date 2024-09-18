@@ -1,7 +1,6 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -10,7 +9,6 @@ def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader("UTF-8") { reader ->
         localProperties.load(reader)
-    }
 }
 
 def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
@@ -55,4 +53,4 @@ android {
 
 flutter {
     source = "../.."
-}
+}}

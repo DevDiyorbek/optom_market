@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart'; // Add this import
 import 'package:optom_market/data/datasources/auth_service.dart';
 
 import 'otp_page.dart';
@@ -29,11 +28,10 @@ class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && !_navigatedToOtp) {
-      // App was resumed, check if we should navigate to OTP page
       setState(() {
         _navigatedToOtp = true;
       });
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const Otp(),
         ),

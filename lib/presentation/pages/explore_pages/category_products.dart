@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:optom_market/data/models/category_model.dart';
-import '../../widgets/product_card.dart';
+import '../../../data/models/category_model.dart';
 import '../../controllers/category_products_controller.dart';
+import '../../widgets/product_card.dart';
 
 class CategoryProducts extends StatelessWidget {
   final ProductCategoryModel category;
@@ -11,25 +11,30 @@ class CategoryProducts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        'Building CategoryProducts for category: ${category.name} (ID: ${category.id})');
+
     final CategoryProductsController controller = Get.put(
-        CategoryProductsController(
-            category.id)); // Initialize controller with category ID
+      CategoryProductsController(category.id),
+      tag: 'category_${category.id}',
+    );
 
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(category.name), // Display the category name
+        title: Text(category.name),
         actions: [
           IconButton(
             icon: const Icon(Icons.filter_alt_outlined),
             onPressed: () {
               // Handle filter button press
-              // You can show a filter dialog or navigate to a filter screen
             },
           ),
         ],
       ),
       body: Obx(() {
+        print(
+            'Rebuilding Obx widget. Products: ${controller.productList.length}');
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         } else if (controller.productList.isEmpty) {
@@ -37,7 +42,6 @@ class CategoryProducts extends StatelessWidget {
         } else {
           return ListView.builder(
             itemCount: (controller.productList.length / 2).ceil(),
-            // Calculate the number of rows
             itemBuilder: (context, rowIndex) {
               final index1 = rowIndex * 2;
               final index2 = index1 + 1;

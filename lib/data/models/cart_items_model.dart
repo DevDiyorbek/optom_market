@@ -3,7 +3,7 @@ import 'product_model.dart';
 class CartItemsModel {
   final int id;
   final ProductModel product;
-  final int quantity;
+  int quantity;
   final double itemCost;
   final String createdDate;
 

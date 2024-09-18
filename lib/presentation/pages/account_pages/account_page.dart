@@ -13,7 +13,8 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AccountController accountController = Get.put(AccountController()); // Initialize controller
+    final AccountController accountController =
+        Get.put(AccountController()); // Initialize controller
 
     return SafeArea(
       child: Scaffold(
@@ -28,16 +29,16 @@ class AccountPage extends StatelessWidget {
                   children: [
                     ClipOval(
                       child: accountController.userData['image'] != null &&
-                          accountController.userData['image']!.isNotEmpty
+                              accountController.userData['image']!.isNotEmpty
                           ? Image.network(accountController.userData['image']!,
-                          height: 50, width: 50, fit: BoxFit.cover)
+                              height: 50, width: 50, fit: BoxFit.cover)
                           : Container(
-                        height: 50,
-                        width: 50,
-                        color: Colors.grey, // Placeholder color
-                        child: const Icon(Icons.person,
-                            color: Colors.white), // Placeholder icon
-                      ),
+                              height: 50,
+                              width: 50,
+                              color: Colors.grey, // Placeholder color
+                              child: const Icon(Icons.person,
+                                  color: Colors.white), // Placeholder icon
+                            ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

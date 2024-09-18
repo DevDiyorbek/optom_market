@@ -8,11 +8,19 @@ import '../../controllers/shop_page_controller.dart';
 class ShopPage extends StatelessWidget {
   final PageController? pageController;
   final ShopPageController shopController = Get.put(ShopPageController());
+  final ScrollController _scrollController = ScrollController();
 
   ShopPage({super.key, this.pageController});
 
   @override
   Widget build(BuildContext context) {
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        shopController.loadMoreProducts();
+      }
+    });
+
     return SafeArea(
       child: Center(
         child: Container(
@@ -43,9 +51,10 @@ class ShopPage extends StatelessWidget {
                 Expanded(
                   child: Obx(
                     () {
-                      if (shopController.isLoading.value) {
+                      if (shopController.isLoading.value &&
+                          shopController.filteredProductList.isEmpty) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (shopController.productList.isEmpty) {
+                      } else if (shopController.filteredProductList.isEmpty) {
                         return const Center(
                             child: Text('No products available'));
                       } else {
@@ -54,27 +63,39 @@ class ShopPage extends StatelessWidget {
                             shopController.refreshProducts();
                           },
                           child: ListView.builder(
+                            controller: _scrollController,
                             itemCount:
-                                (shopController.productList.length / 2).ceil(),
+                                (shopController.filteredProductList.length / 2).ceil() +
+                                    1,
                             itemBuilder: (context, rowIndex) {
-                              final index1 = rowIndex * 2;
-                              final index2 = index1 + 1;
-                              return Row(
-                                children: [
-                                  Expanded(
-                                    child: productCard(
-                                        shopController.productList[index1],
-                                        context),
-                                  ),
-                                  if (index2 <
-                                      shopController.productList.length)
+                              if (rowIndex <
+                                  (shopController.filteredProductList.length / 2)
+                                      .ceil()) {
+                                final index1 = rowIndex * 2;
+                                final index2 = index1 + 1;
+                                return Row(
+                                  children: [
                                     Expanded(
                                       child: productCard(
-                                          shopController.productList[index2],
+                                          shopController.filteredProductList[index1],
                                           context),
                                     ),
-                                ],
-                              );
+                                    if (index2 <
+                                        shopController.filteredProductList.length)
+                                      Expanded(
+                                        child: productCard(
+                                            shopController.filteredProductList[index2],
+                                            context),
+                                      ),
+                                  ],
+                                );
+                              } else {
+                                return Obx(() =>
+                                    shopController.hasMoreItems.value
+                                        ? const Center(
+                                            child: CircularProgressIndicator())
+                                        : const SizedBox.shrink());
+                              }
                             },
                           ),
                         );

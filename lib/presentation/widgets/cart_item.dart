@@ -5,6 +5,7 @@ import 'package:optom_market/utility/LogServices.dart';
 import '../../data/models/cart_items_model.dart';
 import '../controllers/cart_item_controller.dart';
 
+//TODO work on items total value.
 
 class CartItemWidget extends StatelessWidget {
   final CartItemsModel cartItem;
@@ -16,7 +17,7 @@ class CartItemWidget extends StatelessWidget {
     required this.cartItem,
     required this.cartController,
   }) {
-    cartItemController = CartItemController(cartItem.quantity);
+    cartItemController = CartItemController(cartItem, cartItem.quantity);
   }
 
   void _showConfirmationDialog(BuildContext context) {
@@ -36,7 +37,7 @@ class CartItemWidget extends StatelessWidget {
             ),
             TextButton(
               onPressed: () {
-                cartItemController.onRemove(cartItem.id);
+                cartItemController.onRemove();
                 cartController.refreshCartItems(); // Refresh cart items here
                 LogService.w("Item removed successfully");
                 Navigator.of(context).pop(); // Close the dialog
@@ -100,8 +101,7 @@ class CartItemWidget extends StatelessWidget {
                                 icon: const Icon(Icons.remove),
                                 onPressed: cartItemController.decreaseQuantity,
                               ),
-                              Text(
-                                  '${cartItemController.productQuantity.value}'),
+                              Text('${cartItemController.productQuantity.value}'),
                               IconButton(
                                 icon: const Icon(Icons.add),
                                 onPressed: cartItemController.increaseQuantity,
@@ -133,7 +133,7 @@ class CartItemWidget extends StatelessWidget {
                           ),
                         ),
                         Obx(() => Text(
-                              "${(cartItem.itemCost * cartItemController.productQuantity.value / value).toStringAsFixed(2)} so'm",
+                              "${(cartItem.product.price * cartItemController.productQuantity.value).toStringAsFixed(2)} so'm",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,

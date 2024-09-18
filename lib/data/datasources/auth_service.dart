@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher_string.dart';
 import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
+import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
+
 
 class AuthService {
   final String baseUrl = 'https://api.sodiqdev.cloud';
   final SecureStorage _secureStorage = SecureStorage();
+  final UrlLauncherPlatform launcher = UrlLauncherPlatform.instance;
 
   Future<void> login(String code) async {
     try {
@@ -89,13 +91,15 @@ class AuthService {
     return false; // Placeholder; implement your expiration logic if needed
   }
 
-  void navigateToTelegramBot() async {
-    const telegramUrl = 'https://t.me/MusicLyricsSSbot';
 
-    if (await canLaunchUrlString(telegramUrl)) {
-      await launchUrlString(telegramUrl);
-    } else {
-      throw 'Could not launch $telegramUrl';
+  Future<void> navigateToTelegramBot() async {
+    const String telegramBotUrl = 'tg://resolve?domain=MusicLyricsSSbot';
+
+    if (!await launcher.launchUrl(
+      telegramBotUrl,
+      const LaunchOptions(mode: PreferredLaunchMode.externalApplication),
+    )) {
+      throw Exception('Could not launch $telegramBotUrl');
     }
   }
 }

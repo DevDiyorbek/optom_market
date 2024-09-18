@@ -1,28 +1,28 @@
 import 'package:get/get.dart';
 import 'package:optom_market/data/models/product_model.dart';
-import '../../data/datasources/http_service.dart';
+import 'package:optom_market/data/datasources/http_service.dart';
 
 class CategoryProductsController extends GetxController {
-  var productList = <ProductModel>[].obs; // Observable list for products in this category
-  var isLoading = true.obs; // Observable loading state
-  final int categoryId; // The ID of the category for which to fetch products
+  final int categoryId;
+  final ApiService _apiService = ApiService();
+  var productList = <ProductModel>[].obs;
+  var isLoading = true.obs;
 
-  CategoryProductsController(this.categoryId); // Constructor accepting category ID
+  CategoryProductsController(this.categoryId);
 
   @override
   void onInit() {
+    fetchProductsByCategory();
     super.onInit();
-    fetchProducts(); // Fetch products on initialization
   }
 
-  Future<void> fetchProducts() async {
+  void fetchProductsByCategory() async {
+    isLoading(true);
     try {
-      isLoading(true);
-      final products = await ApiService().fetchProductsByCategory(categoryId); // Fetching products by category
-      productList.value = products.items; // Update observable product list
-    } catch (e) {
-      // Handle any errors that occur during API calls
-      print('Error fetching products: $e');
+      final products = await _apiService.fetchProductsByCategory(categoryId);
+      productList.assignAll(products.items);
+    } catch (error) {
+      print('Error fetching products for category $categoryId: $error');
     } finally {
       isLoading(false);
     }
