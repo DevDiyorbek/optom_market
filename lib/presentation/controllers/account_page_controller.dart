@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import 'package:optom_market/data/datasources/auth_service.dart';
-import '../../../utility/secure_storage.dart';
+import 'package:optom_market/data/datasources/user_service.dart';
+import '../../data/models/user_profile_model.dart';
 import '../pages/auth_screens/sign_in_page.dart';
 
 class AccountController extends GetxController {
-  var userData = <String, String?>{}.obs;
-  final SecureStorage _secureStorage = SecureStorage();
+  var userProfile = Rxn<UserProfile>(); // Use Rxn to handle null cases
 
   @override
   void onInit() {
@@ -14,7 +14,10 @@ class AccountController extends GetxController {
   }
 
   Future<void> loadUserData() async {
-    userData.value = await _secureStorage.readUserData();
+    UserProfile? profile = await UserService().getUserDetails();
+    if (profile != null) {
+      userProfile.value = profile;
+    }
   }
 
   Future<void> logout() async {

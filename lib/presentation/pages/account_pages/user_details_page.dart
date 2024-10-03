@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../controllers/user_details_page_controller.dart';
 
-class UserDetailsPage extends StatelessWidget {
+class UserDetailsPage extends StatefulWidget {
   const UserDetailsPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final UserDetailsPageController userDetailsController =
-        Get.put(UserDetailsPageController());
+  State<UserDetailsPage> createState() => _UserDetailsPageState();
+}
 
+class _UserDetailsPageState extends State<UserDetailsPage> {
+  final UserDetailsPageController userDetailsController =
+      Get.put(UserDetailsPageController());
+
+  @override
+  void initState() {
+    super.initState();
+    userDetailsController.loadUserData(); // Fetch user data on initialization
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -21,9 +31,19 @@ class UserDetailsPage extends StatelessWidget {
           },
         ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
+        // Use SingleChildScrollView to allow scrolling
         padding: const EdgeInsets.all(16.0),
         child: Obx(() {
+          // User profile data is accessed through userDetailsController.userProfile
+          final userProfile = userDetailsController.userProfile.value;
+
+          if (userProfile == null) {
+            return const Center(
+                child:
+                    CircularProgressIndicator()); // Show a loading indicator if data is not yet loaded
+          }
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,30 +52,28 @@ class UserDetailsPage extends StatelessWidget {
                   alignment: Alignment.bottomRight,
                   children: [
                     ClipOval(
-                      child: userDetailsController.userData['image'] != null &&
-                              userDetailsController
-                                  .userData['image']!.isNotEmpty
+                      child: userProfile.image.isNotEmpty
                           ? Image.network(
-                              userDetailsController.userData['image']!,
+                              userProfile.image,
                               height: 200,
                               width: 200,
                               fit: BoxFit.cover,
                             )
                           : Container(
-                              height: 250,
-                              width: 250,
+                              height: 200,
+                              width: 200,
                               color: Colors.grey, // Placeholder color
                               child: const Icon(
                                 Icons.person,
                                 color: Colors.white,
-                              ), // Placeholder icon
+                              ),
                             ),
                     ),
                     IconButton(
                       iconSize: 30,
                       icon: const Icon(Icons.camera_alt),
                       onPressed: () {
-                        // Implement profile picture change functionality
+                        userDetailsController.pickAndUploadImage();
                       },
                     ),
                   ],
@@ -63,35 +81,51 @@ class UserDetailsPage extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                controller: userDetailsController.nameController,
+                readOnly: true, // Make the name field non-editable
+                controller: userDetailsController.nameController
+                  ..text =
+                      '${userProfile.firstName} ${userProfile.lastName ?? ''}',
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
               ),
               TextFormField(
-                controller: userDetailsController.telegramUsernameController,
+                readOnly: true, // Make the Telegram username field non-editable
+                controller: userDetailsController.telegramUsernameController
+                  ..text = userProfile.username ?? "N/A",
                 decoration: const InputDecoration(
                   labelText: 'Telegram Username',
                 ),
-                keyboardType:
-                    TextInputType.text, // Changed to text for usernames
               ),
               TextFormField(
-                controller: userDetailsController.phoneNumberController,
+                readOnly: true, // Make the phone number field non-editable
+                controller: userDetailsController.phoneNumberController
+                  ..text = userProfile.phoneNumber ?? "N/A",
                 decoration: const InputDecoration(
                   labelText: 'Phone Number',
                 ),
-                keyboardType:
-                    TextInputType.phone, // Changed to phone for phone numbers
+              ),
+              const SizedBox(height: 10),
+              TextFormField(
+                controller: userDetailsController.addressController,
+                decoration: const InputDecoration(
+                  labelText: 'Address',
+                ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  userDetailsController
-                      .saveUserData(); // Implement saving functionality
-                },
-                child: const Text('Save Changes'),
-              ),
+              Obx(() {
+                return ElevatedButton(
+                  onPressed: userDetailsController.isLoading.value
+                      ? null // Disable the button while loading
+                      : () {
+                          userDetailsController
+                              .saveUserData(); // Save user data
+                        },
+                  child: userDetailsController.isLoading.value
+                      ? const CircularProgressIndicator() // Show loading indicator
+                      : const Text('Save Changes'),
+                );
+              }),
             ],
           );
         }),

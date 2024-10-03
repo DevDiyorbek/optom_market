@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:optom_market/data/datasources/auth_service.dart';
 import 'package:optom_market/presentation/config/root_binding.dart';
 import 'package:optom_market/presentation/pages/home_page.dart';
 import 'package:optom_market/presentation/pages/auth_screens/sign_in_page.dart';
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
 
   Future<bool> _checkAccessToken() async {
     SecureStorage secureStorage = SecureStorage();
-    String? token = await secureStorage.read('access_token'); // Replace 'access_token' with your actual access token key
+    String? token = await secureStorage.read('access_token');
     return token != null;
   }
 

@@ -1,16 +1,23 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
-
 
 class AuthService {
   final String baseUrl = 'https://api.sodiqdev.cloud';
   final SecureStorage _secureStorage = SecureStorage();
   final UrlLauncherPlatform launcher = UrlLauncherPlatform.instance;
 
-  Future<void> login(String code) async {
+  void attachCheck() {}
+
+  Future<bool> login(String code) async {
+    final SecureStorage secureStorage = SecureStorage();
+    await secureStorage.delete('access_token');
+    await secureStorage.delete('refresh_token');
+    String? name = await secureStorage.read('access');
+    LogService.w('Name of the user is : $name');
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
@@ -26,7 +33,7 @@ class AuthService {
         final accessToken = data['data']['access_token'];
         final refreshToken = data['data']['refresh_token'];
 
-        await _secureStorage.saveUserAndTokenData(
+        await secureStorage.saveUserAndTokenData(
           firstName: user['first_name'],
           phoneNumber: user['phone_number'],
           username: user['username'],
@@ -37,20 +44,23 @@ class AuthService {
         );
 
         print('Login successful');
-        String? image = await _secureStorage.read('image');
-        LogService.w('Name of the user is : $image');
+        LogService.w('Name of the user is : $name');
+        LogService.w("access: ${secureStorage.read('access_token')}");
+
+        return true;
       } else {
         print('Login failed: ${response.body}');
+        return false;
       }
     } catch (e) {
       print('Error during login: $e');
+      return false;
     }
   }
 
   Future<void> logout() async {
     await _secureStorage.delete('access_token');
     await _secureStorage.delete('refresh_token');
-
     print('User logged out.');
   }
 
@@ -60,7 +70,6 @@ class AuthService {
       print('No refresh token available');
       return;
     }
-
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/refresh'),
@@ -69,37 +78,51 @@ class AuthService {
           'Authorization': 'Bearer $refreshToken',
         },
       );
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         await _secureStorage.write('access_token', data['access_token']);
-        await _secureStorage.write('refresh_token', data['refresh_token']);
-
         print('Tokens refreshed successfully');
       } else {
         print('Failed to refresh token: ${response.body}');
-        logout(); // Handle logout if refresh fails
+        logout();
       }
     } catch (e) {
       print('Error during token refresh: $e');
-      logout(); // Handle logout if refresh fails
+      logout();
     }
   }
 
   bool isTokenExpired(String token) {
-    // Implement logic to check if the token is expired
-    return false; // Placeholder; implement your expiration logic if needed
+    return false;
   }
 
-
   Future<void> navigateToTelegramBot() async {
+    const String telegramBotUrl2 = 'https://t.me/MusicLyricsSSbot';
     const String telegramBotUrl = 'tg://resolve?domain=MusicLyricsSSbot';
 
-    if (!await launcher.launchUrl(
+    bool firstUrlSuccess = await launcher.launchUrl(
       telegramBotUrl,
       const LaunchOptions(mode: PreferredLaunchMode.externalApplication),
-    )) {
-      throw Exception('Could not launch $telegramBotUrl');
+    );
+
+    try {
+      if (await canLaunch(telegramBotUrl2)) {
+        await launch(
+          telegramBotUrl2,
+          forceSafariVC: false,
+          forceWebView: false,
+        );
+      } else if (!firstUrlSuccess) {
+        await launch(
+          telegramBotUrl,
+          forceSafariVC: false,
+          forceWebView: false,
+        );
+      } else {
+        throw Exception('Could not launch $telegramBotUrl or $telegramBotUrl2');
+      }
+    } catch (e) {
+      print('Error launching URL: $e'); // Log or handle the error accordingly
     }
   }
 }

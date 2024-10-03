@@ -28,7 +28,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     checkoutController = Get.put(CheckoutController());
     cartController = Get.put(CartController());
-    addressController = TextEditingController(text: widget.initialDeliveryAddress);
+    addressController =
+        TextEditingController(text: widget.initialDeliveryAddress);
     checkoutController.address.value = widget.initialDeliveryAddress;
     checkoutController.totalCost.value = widget.initialTotalCost;
   }
@@ -62,7 +63,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   children: [
                     const Text(
                       'Checkout',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     IconButton(
                       onPressed: () => Get.back(),
@@ -78,58 +80,40 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Delivery Address:'),
-                    Flexible(
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: addressController,
-                            textAlign: TextAlign.right,
-                            onChanged: (value) {
-                              checkoutController.setAddress(value);
-                            },
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),  // Underlined decoration
-                              contentPadding: EdgeInsets.zero,
-                              hintText: 'Enter your delivery address', // You may add a hint text
-                            ),
-                          ),
-                          Obx(() {
-                            // Conditionally show the warning message in red
-                            if (checkoutController.address.value.isEmpty) {
-                              return const Padding(
-                                padding: EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  'Please, Enter the address',
-                                  style: TextStyle(color: Colors.red),
-                                ),
-                              );
-                            }
-                            return const SizedBox.shrink(); // Return an empty widget if no message
-                          }),
-                        ],
+                    const SizedBox(width: 20,),
+                    Expanded(
+                      child: TextField(
+                        controller: addressController,
+                        textAlign: TextAlign.center,
+                        onChanged: (value) {
+                          checkoutController.setAddress(value);
+                        },
+                        decoration: const InputDecoration(
+                          border: UnderlineInputBorder(),
+                          contentPadding: EdgeInsets.zero,
+                        ),
                       ),
                     ),
                   ],
                 ),
-
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     const Text('Payment Method:'),
                     Obx(() => DropdownButton<String>(
-                      value: checkoutController.paymentMethod.value,
-                      items: ['Cash', 'Card'].map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        if (newValue != null) {
-                          checkoutController.setPaymentMethod(newValue);
-                        }
-                      },
-                    )),
+                          value: checkoutController.paymentMethod.value,
+                          items: ['Cash', 'Card'].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            if (newValue != null) {
+                              checkoutController.setPaymentMethod(newValue);
+                            }
+                          },
+                        )),
                   ],
                 ),
                 Row(
@@ -137,9 +121,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   children: [
                     const Text('Total Cost:'),
                     Obx(() => Text(
-                      '\$${checkoutController.totalCost.value.toStringAsFixed(2)}',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    )),
+                          '\$${checkoutController.totalCost.value.toStringAsFixed(2)}',
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )),
                   ],
                 ),
               ],
@@ -155,7 +139,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       Get.back();
                     });
                   } else {
-                    // Showing error if needed; could also use a SnackBar if you prefer
                     Get.snackbar(
                       'Error',
                       'Address cannot be empty',

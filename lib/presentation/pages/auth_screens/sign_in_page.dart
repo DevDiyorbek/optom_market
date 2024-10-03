@@ -12,9 +12,11 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> with WidgetsBindingObserver {
   bool _navigatedToOtp = false;
+  AuthService authService = AuthService();
 
   @override
   void initState() {
+    // authService.logout();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
   }

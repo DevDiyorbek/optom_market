@@ -2,12 +2,12 @@ import 'package:optom_market/data/models/product_model.dart';
 
 class OrderResponse {
   final int id;
-  final UserInfo userInfo;
   final String orderDate;
   final double orderAmount;
   final String orderStatus;
   final String shippingAddress;
   final List<OrderDetail> orderDetails;
+  final UserInfo userInfo;
 
   OrderResponse({
     required this.id,
@@ -35,10 +35,10 @@ class OrderResponse {
 }
 
 class UserInfo {
-  final String firstName;
+  final String? firstName;
   final String? lastName;
-  final String phoneNumber;
-  final int telegramId;
+  final String? phoneNumber;
+  final int? telegramId;
   final String? username;
 
   UserInfo({
@@ -62,13 +62,11 @@ class UserInfo {
 
 class OrderDetail {
   final int id;
-  final int orderId;
   final ProductModel product;
   final int quantity;
 
   OrderDetail({
     required this.id,
-    required this.orderId,
     required this.product,
     required this.quantity,
   });
@@ -76,7 +74,6 @@ class OrderDetail {
   factory OrderDetail.fromJson(Map<String, dynamic> json) {
     return OrderDetail(
       id: json['id'],
-      orderId: json['order_id'],
       product: ProductModel.fromJson(json['product']),
       quantity: json['quantity'],
     );

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:optom_market/presentation/pages/home_page.dart';
-import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
 import 'package:optom_market/presentation/widgets/textFieldOtp.dart';
 import '../../../data/datasources/auth_service.dart';
 
 class Otp extends StatefulWidget {
-  const Otp({Key? key}) : super(key: key);
+  const Otp({super.key});
 
   @override
   _OtpState createState() => _OtpState();
@@ -15,7 +14,7 @@ class _OtpState extends State<Otp> {
   final AuthService _authService = AuthService();
 
   final List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
+      List.generate(6, (index) => TextEditingController());
 
   String _getOtpCode() {
     return _controllers.map((controller) => controller.text).join('');
@@ -86,7 +85,7 @@ class _OtpState extends State<Otp> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: List.generate(
                           6,
-                              (index) {
+                          (index) {
                             return TextFieldOTP(
                               controller: _controllers[index],
                               first: index == 0,
@@ -99,22 +98,30 @@ class _OtpState extends State<Otp> {
                       SizedBox(
                         width: double.infinity,
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => const HomePage(),
-                              ),
-                            );
+                          onPressed: () async {
                             String otpCode = _getOtpCode();
-                            _authService.login(otpCode);
+                            bool loginSuccessful =
+                                await _authService.login(otpCode);
+                            if (loginSuccessful) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => const HomePage(),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Password is incorrect or expired.')),
+                              );
+                            }
                           },
                           style: ButtonStyle(
                             foregroundColor:
-                            WidgetStateProperty.all<Color>(Colors.white),
+                                WidgetStateProperty.all<Color>(Colors.white),
                             backgroundColor:
-                            WidgetStateProperty.all<Color>(Colors.purple),
+                                WidgetStateProperty.all<Color>(Colors.purple),
                             shape:
-                            WidgetStateProperty.all<RoundedRectangleBorder>(
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24.0),
                               ),

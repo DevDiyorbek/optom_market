@@ -24,13 +24,14 @@ class AccountPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Obx(() {
+                final userProfile = accountController.userProfile.value;
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ClipOval(
-                      child: accountController.userData['image'] != null &&
-                              accountController.userData['image']!.isNotEmpty
-                          ? Image.network(accountController.userData['image']!,
+                      child: userProfile?.image != null &&
+                              userProfile!.image.isNotEmpty
+                          ? Image.network(userProfile.image,
                               height: 50, width: 50, fit: BoxFit.cover)
                           : Container(
                               height: 50,
@@ -44,12 +45,12 @@ class AccountPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          accountController.userData['first_name'] ?? 'N/A',
+                          userProfile?.firstName ?? 'N/A',
                           style: const TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          accountController.userData['last_name'] ?? 'N/A',
+                          userProfile?.lastName ?? 'N/A',
                           style: const TextStyle(fontSize: 16),
                         ),
                       ],
@@ -125,7 +126,6 @@ class AccountPage extends StatelessWidget {
   Widget _accountOption(IconData icon, String text, Widget className) {
     return InkWell(
       onTap: () {
-        // Use Get.to() for navigation
         Get.to(() => className);
       },
       child: SizedBox(

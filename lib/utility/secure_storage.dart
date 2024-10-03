@@ -15,18 +15,6 @@ class SecureStorage {
     return _storage.delete(key: key);
   }
 
-  Future<void> saveUserAddress({required String? address}) async {
-    await write('address', address ?? "");
-  }
-
-  Future<Map<String, String?>> readUserAddress() async {
-    final address = await read('address');
-
-    return {
-      'address': address,
-    };
-  }
-
   Future<void> saveUserAndTokenData({
     required String firstName,
     required String phoneNumber,
