@@ -15,13 +15,14 @@ class SearchWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, right: 10),
       height: 45,
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.2),
-          borderRadius: BorderRadius.circular(7)),
+        color: Colors.grey.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(7),
+      ),
       child: TextField(
+
+        onChanged: (value) => shopController.applySearch(value),
+        controller: shopController.textEditingController,
         style: const TextStyle(color: Colors.black87),
-        onChanged: (value) {
-          shopController.searchProducts(value);
-        },
         decoration: const InputDecoration(
           hintText: "Search",
           border: InputBorder.none,

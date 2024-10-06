@@ -5,12 +5,30 @@ import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
 import 'package:url_launcher_platform_interface/url_launcher_platform_interface.dart';
 
+
 class AuthService {
   final String baseUrl = 'https://api.sodiqdev.cloud';
   final SecureStorage _secureStorage = SecureStorage();
   final UrlLauncherPlatform launcher = UrlLauncherPlatform.instance;
 
-  void attachCheck() {}
+
+  void checkAccessToken(http.Response response) {
+    if (response.statusCode == 401){
+      refreshAccessToken();
+    }
+    else if (response.statusCode == 403) {
+      logout();
+    }
+  }
+
+  Future<void> logout() async {
+    await _secureStorage.delete('access_token');
+    await _secureStorage.delete('refresh_token');
+    await _secureStorage.delete('first_name');
+    await _secureStorage.delete('phone_number');
+    await _secureStorage.delete('image');
+    LogService.w('User logged out');
+  }
 
   Future<bool> login(String code) async {
     final SecureStorage secureStorage = SecureStorage();
@@ -58,11 +76,8 @@ class AuthService {
     }
   }
 
-  Future<void> logout() async {
-    await _secureStorage.delete('access_token');
-    await _secureStorage.delete('refresh_token');
-    print('User logged out.');
-  }
+
+
 
   Future<void> refreshAccessToken() async {
     final refreshToken = await _secureStorage.read('refresh_token');
@@ -90,10 +105,6 @@ class AuthService {
       print('Error during token refresh: $e');
       logout();
     }
-  }
-
-  bool isTokenExpired(String token) {
-    return false;
   }
 
   Future<void> navigateToTelegramBot() async {

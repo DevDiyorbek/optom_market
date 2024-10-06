@@ -3,10 +3,15 @@ import 'package:http/http.dart' as http;
 import '../../utility/LogServices.dart';
 import '../../utility/secure_storage.dart';
 import '../models/cart_items_model.dart';
+import 'auth_service.dart';
 
 class CartService {
   final String baseUrl = 'https://api.sodiqdev.cloud';
   final SecureStorage _secureStorage = SecureStorage();
+  final AuthService _authService;
+
+  CartService({AuthService? authService})
+      : _authService = authService ?? AuthService();
 
   Future<void> addProductToCart(int productId, int quantity) async {
     String? accessToken = await _secureStorage.read('access_token');
@@ -25,20 +30,22 @@ class CartService {
         },
       );
 
+      _authService.checkAccessToken(response);
+
       if (response.statusCode == 201) {
         LogService.w('Product added to cart successfully.');
       } else {
         LogService.e('Failed to add product to cart: ${response.body}');
       }
     } catch (e) {
-      print('Error during adding product to cart: $e');
+      LogService.e('Error during adding product to cart: $e');
     }
   }
 
   Future<List<CartItemsModel>> getCartItems() async {
     String? accessToken = await _secureStorage.read('access_token');
     if (accessToken == null) {
-      print('No access token; cannot retrieve cart items.');
+      LogService.w('No access token; cannot retrieve cart items.');
       return [];
     }
     try {
@@ -49,6 +56,9 @@ class CartService {
           'Authorization': 'Bearer $accessToken',
         },
       );
+
+      _authService.checkAccessToken(response);
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         List<CartItemsModel> cartItems = (data['cart_items'] as List)
@@ -56,11 +66,11 @@ class CartService {
             .toList();
         return cartItems;
       } else {
-        print('Failed to retrieve cart items: ${response.body}');
+        LogService.e('Failed to retrieve cart items: ${response.body}');
         return [];
       }
     } catch (e) {
-      print('Error during retrieving cart items: $e');
+      LogService.e('Error during retrieving cart items: $e');
       return [];
     }
   }
@@ -82,14 +92,15 @@ class CartService {
         },
       );
 
+      _authService.checkAccessToken(response);
+
       if (response.statusCode == 200) {
         LogService.w('Item removed from cart successfully.');
       } else {
         LogService.e('Failed to remove item from cart: ${response.body}');
       }
     } catch (e) {
-      print('Error during removing item from cart: $e');
+      LogService.e('Error during removing item from cart: $e');
     }
   }
-
 }

@@ -52,7 +52,6 @@ class CartItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final value = cartItemController.productQuantity.value;
     return Container(
       color: Colors.white,
       child: Padding(

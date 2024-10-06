@@ -15,7 +15,7 @@ class UserDetailsPageController extends GetxController {
   // Controllers for TextFields
   final TextEditingController nameController = TextEditingController();
   final TextEditingController telegramUsernameController =
-      TextEditingController();
+  TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
@@ -25,27 +25,25 @@ class UserDetailsPageController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    loadUserData(); // Fetch user data on initialization
+    loadUserData();
   }
 
   Future<void> loadUserData() async {
-    // Load address from secure storage
     addressController.text = (await _secureStorage.read('address')) ?? "";
 
-    // Fetch user details from UserService
     UserProfile? profile = await _userService.getUserDetails();
     if (profile != null) {
       userProfile.value = profile;
       nameController.text = '${profile.firstName} ${profile.lastName ?? ''}';
       telegramUsernameController.text = profile.username ?? "N/A";
       phoneNumberController.text = profile.phoneNumber ?? "N/A";
-      // Any additional data processing can be done here
     }
   }
 
   Future<void> saveUserData() async {
     isLoading.value = true;
     try {
+      await _userService.updateUserAddress(addressController.text);
       await _secureStorage.write('address', addressController.text);
       Get.snackbar("Success", "User data saved successfully!");
       LogService.w("address: ${await _secureStorage.read('address')}");
@@ -64,7 +62,7 @@ class UserDetailsPageController extends GetxController {
       bool uploadSuccess = await _userService.uploadImage(imageFile);
 
       if (uploadSuccess) {
-        refreshUserData(); // Refresh user data to reflect image changes
+        refreshUserData();
       }
     } else {
       print("No image selected.");
@@ -72,7 +70,7 @@ class UserDetailsPageController extends GetxController {
   }
 
   Future<void> refreshUserData() async {
-    await loadUserData(); // Reload the user data
+    await loadUserData();
     Get.snackbar("Success", "User data refreshed!");
   }
 

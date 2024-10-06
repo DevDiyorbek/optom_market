@@ -23,14 +23,6 @@ class CategoryProducts extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(category.name),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_alt_outlined),
-            onPressed: () {
-              // Handle filter button press
-            },
-          ),
-        ],
       ),
       body: Obx(() {
         print(

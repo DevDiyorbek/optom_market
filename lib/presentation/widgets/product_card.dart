@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:optom_market/data/models/product_model.dart';
 import 'package:optom_market/presentation/pages/shop_pages/product_details.dart';
 
@@ -10,7 +11,7 @@ Widget productCard(
     onTap: () {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProductDetails(product:product),
+          builder: (context) => ProductDetails(product: product),
         ),
       );
     },
@@ -56,6 +57,8 @@ Widget productCard(
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis, // Prevent text overflow
+              maxLines: 1, // Limit the product name to one line
             ),
           ),
           const SizedBox(height: 8.0),
@@ -65,8 +68,9 @@ Widget productCard(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                // Format the price with commas
                 Text(
-                  product.price.toString(),
+                  NumberFormat('#,##0').format(product.price), // Format as integer with commas
                   style: const TextStyle(
                     fontSize: 18,
                   ),

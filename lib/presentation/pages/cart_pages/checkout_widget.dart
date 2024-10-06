@@ -28,8 +28,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     checkoutController = Get.put(CheckoutController());
     cartController = Get.put(CartController());
-    addressController =
-        TextEditingController(text: widget.initialDeliveryAddress);
+    addressController = TextEditingController(text: widget.initialDeliveryAddress);
     checkoutController.address.value = widget.initialDeliveryAddress;
     checkoutController.totalCost.value = widget.initialTotalCost;
   }

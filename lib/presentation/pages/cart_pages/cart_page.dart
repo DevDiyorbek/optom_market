@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:optom_market/utility/secure_storage.dart';
 import '../../controllers/cart_controller.dart';
 import '../../widgets/cart_item.dart';
 import 'checkout_widget.dart';
@@ -63,7 +62,6 @@ class CartPage extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () async {
-                          // Show a loading indicator.
                           showDialog(
                             context: context,
                             barrierDismissible: false,
@@ -85,14 +83,12 @@ class CartPage extends StatelessWidget {
                           // Dismiss the loading indicator
                           Navigator.pop(context);
 
-                          // Show the bottom sheet with the fetched address
                           showModalBottomSheet(
                             context: context,
                             isScrollControlled: true,
                             backgroundColor: Colors.transparent,
                             builder: (BuildContext context) {
-                              double totalPrice =
-                                  cartController.calculateTotalPrice();
+                              double totalPrice = cartController.calculateTotalPrice();
                               return Container(
                                 decoration: const BoxDecoration(
                                   color: Colors.white,

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:optom_market/presentation/pages/cart_pages/checkout_widget.dart';
 import '../../data/datasources/cart_service.dart';
 import '../../data/models/cart_items_model.dart';
 import '../../utility/secure_storage.dart';

@@ -82,15 +82,14 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
               const SizedBox(height: 20),
               TextFormField(
                 readOnly: true, // Make the name field non-editable
-                controller: userDetailsController.nameController
-                  ..text =
+                controller: userDetailsController.nameController..text =
                       '${userProfile.firstName} ${userProfile.lastName ?? ''}',
                 decoration: const InputDecoration(
                   labelText: 'Name',
                 ),
               ),
               TextFormField(
-                readOnly: true, // Make the Telegram username field non-editable
+                readOnly: true,
                 controller: userDetailsController.telegramUsernameController
                   ..text = userProfile.username ?? "N/A",
                 decoration: const InputDecoration(

@@ -55,7 +55,11 @@ class AccountPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Icon(Icons.edit, size: 24), // Edit icon
+                    GestureDetector(
+                        onTap: () {
+                          Get.to(() => const UserDetailsPage());
+                        },
+                        child: const Icon(Icons.edit, size: 24)), // Edit icon
                   ],
                 );
               }),

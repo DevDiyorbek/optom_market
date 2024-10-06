@@ -8,7 +8,10 @@ import '../models/OrderResponce.dart';
 class OrderService {
   final String baseUrl = 'https://api.sodiqdev.cloud';
   final SecureStorage _secureStorage = SecureStorage();
-  AuthService authService = AuthService();
+  final AuthService _authService;
+
+  OrderService({AuthService? authService})
+      : _authService = authService ?? AuthService();
 
   Future<OrderResponse> sendOrders({required String shippingAddress}) async {
     final accessToken = await _secureStorage.read('access_token');
@@ -27,20 +30,13 @@ class OrderService {
       }),
     );
 
-    //
-    // if (response.statusCode == 401){
-    //   authService.refreshAccessToken();
-    // } else if (response.statusCode == 403){
-    //   authService.navigateToTelegramBot();
-    // }
+    _authService.checkAccessToken(response);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
-      final SecureStorage _secureStorage = SecureStorage();
       var name = await _secureStorage.read('first_name');
       var token = await _secureStorage.read("access_token");
       LogService.w("Item sent with address : $shippingAddress and name $name and token $token");
       return OrderResponse.fromJson(jsonDecode(response.body));
-
     } else {
       throw Exception('Failed to send order: ${response.statusCode}');
     }
@@ -59,11 +55,7 @@ class OrderService {
       },
     );
 
-    // if (response.statusCode == 401) {
-    //   authService.refreshAccessToken();
-    // } else if (response.statusCode == 403) {
-    //   authService.navigateToTelegramBot();
-    // }
+    _authService.checkAccessToken(response);
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       final Map<String, dynamic> data = jsonDecode(response.body);
@@ -73,5 +65,4 @@ class OrderService {
       throw Exception('Failed to fetch order history: ${response.statusCode}');
     }
   }
-
 }
