@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../controllers/cart_controller.dart';
 import '../../widgets/cart_item.dart';
 import 'checkout_widget.dart';
@@ -122,15 +123,15 @@ class CartPage extends StatelessWidget {
                     ),
                     Obx(
                       () {
-                        double totalPrice =
-                            cartController.calculateTotalPrice();
+
+                        double totalPrice = cartController.calculateTotalPrice();
                         return Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                totalPrice.toStringAsFixed(2),
+                                'Total: ${NumberFormat('#,##0').format(totalPrice)}',
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:optom_market/presentation/controllers/cart_controller.dart';
 import 'package:optom_market/utility/LogServices.dart';
 import '../../data/models/cart_items_model.dart';
 import '../controllers/cart_item_controller.dart';
 
-//TODO work on items total value.
 
 class CartItemWidget extends StatelessWidget {
   final CartItemsModel cartItem;
@@ -132,7 +132,7 @@ class CartItemWidget extends StatelessWidget {
                           ),
                         ),
                         Obx(() => Text(
-                              "${(cartItem.product.price * cartItemController.productQuantity.value).toStringAsFixed(2)} so'm",
+                          "${NumberFormat('#,##0').format(cartItem.product.price * cartItemController.productQuantity.value)} so\'m",
                               style: const TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,

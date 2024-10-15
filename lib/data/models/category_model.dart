@@ -3,7 +3,6 @@ class ProductCategoryModel {
   final int id;
   final String name;
   final String imageUrl;
-
   ProductCategoryModel({required this.id, required this.name, required this.imageUrl});
 
   factory ProductCategoryModel.fromJson(Map<String, dynamic> json) {

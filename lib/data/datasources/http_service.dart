@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:optom_market/utility/LogServices.dart';
 import '../models/category_model.dart';
 import '../models/product_list_model.dart';
+import '../models/product_model.dart';
 
 class ApiService {
   static const String apiUrl = 'https://api.sodiqdev.cloud/';
@@ -50,19 +52,30 @@ class ApiService {
     }
   }
 
-  Future<ProductListModel> fetchProductsByCategory(int categoryId) async {
+  Future<List<ProductModel>> fetchProductsByCategory(int categoryId) async {
+    LogService.w("Method is opened");
     try {
       final response = await http.get(
-        Uri.parse('${apiUrl}products?categories=$categoryId'),
+        Uri.parse('${apiUrl}products/category/$categoryId'),
         headers: {
           'Content-Type': 'application/json',
           'Cookie': 'x-api-key=$apiKey',
         },
       );
       if (response.statusCode == 200) {
+        LogService.w("Success");
         final Map<String, dynamic> json = jsonDecode(response.body);
-        print(ProductListModel.fromJson(json).toString());
-        return ProductListModel.fromJson(json);
+        LogService.w(json.toString());
+
+        // Access the products array within the response
+        List<dynamic> productsJson = json['products'];
+
+        // Map the products into a list of ProductModel
+        List<ProductModel> products = productsJson
+            .map((product) => ProductModel.fromJson(product))
+            .toList();
+
+        return products; // return list of ProductModel
       } else {
         throw Exception('Failed to load products');
       }
@@ -71,12 +84,15 @@ class ApiService {
     }
   }
 
+
   Future<ProductListModel> filterProducts({
     String? name,
     String? sortBy = 'id',
     String? sortOrder = 'desc',
     int? minPrice,
     int? maxPrice,
+    int size = 100,
+
   }) async {
     try {
       final queryParameters = <String, String>{};
@@ -96,6 +112,7 @@ class ApiService {
       if (maxPrice != null) {
         queryParameters['max_price'] = maxPrice.toString();
       }
+      queryParameters['size'] = size.toString();
 
       final uri = Uri.parse('${apiUrl}products/')
           .replace(queryParameters: queryParameters);

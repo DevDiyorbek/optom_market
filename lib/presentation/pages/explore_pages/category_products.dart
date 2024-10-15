@@ -24,35 +24,29 @@ class CategoryProducts extends StatelessWidget {
         centerTitle: true,
         title: Text(category.name),
       ),
-      body: Obx(() {
-        print(
-            'Rebuilding Obx widget. Products: ${controller.productList.length}');
-        if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (controller.productList.isEmpty) {
-          return const Center(child: Text('No products available'));
-        } else {
-          return ListView.builder(
-            itemCount: (controller.productList.length / 2).ceil(),
-            itemBuilder: (context, rowIndex) {
-              final index1 = rowIndex * 2;
-              final index2 = index1 + 1;
-              return Row(
-                children: [
-                  Expanded(
-                    child: productCard(controller.productList[index1], context),
-                  ),
-                  if (index2 < controller.productList.length)
-                    Expanded(
-                      child:
-                          productCard(controller.productList[index2], context),
-                    ),
-                ],
-              );
-            },
-          );
-        }
-      }),
+      body: Container(
+        padding: const EdgeInsets.all(8.0),
+        child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (controller.productList.isEmpty) {
+            return const Center(child: Text('No products available'));
+          } else {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10.0,
+                mainAxisSpacing: 10.0,
+                childAspectRatio: 2/3
+              ),
+              itemCount: controller.productList.length,
+              itemBuilder: (context, index) {
+                return productCard(controller.productList[index], context);
+              },
+            );
+          }
+        }),
+      ),
     );
   }
 }

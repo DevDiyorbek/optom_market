@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:optom_market/data/datasources/cart_service.dart';
 import 'package:optom_market/presentation/controllers/cart_controller.dart';
 import 'package:optom_market/presentation/widgets/snackbar_widget.dart';
@@ -122,13 +123,20 @@ class ProductDetails extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Obx(() => Text(
-                            "${(product.price * productDetailsController.productQuantity.value).toStringAsFixed(2)} so'm",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          )),
+                      Obx(() {
+                        final formatter = NumberFormat('#,##0');
+                        final price = product.price * productDetailsController.productQuantity.value;
+                        final formattedPrice = formatter.format(price);
+
+                        return Text(
+                          "$formattedPrice so'm",
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }),
+
                     ],
                   ),
                   const SizedBox(height: 40.0),

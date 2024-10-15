@@ -39,34 +39,17 @@ class _ShopPageState extends State<ShopPage> {
             body: Column(
               children: [
                 const SizedBox(height: 30),
-                Image.asset('assets/images/logo.png', height: 35),
-                const Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.location_on),
-                      SizedBox(width: 8.0),
-                      Text(
-                        "Khorezm, Gurlen",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ),
                 Row(
                   children: [
-                    const Expanded(flex: 5, child: SearchWidget()),
+                    const Expanded(flex: 7, child: SearchWidget()),
                     Expanded(
                       flex: 1,
-                      child: InkWell(
+                      child: GestureDetector(
                         child: Obx(() => Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           child: Image.asset(
                             shopController.isFiltered.value
-                                ? 'assets/images/cancel_icon.png' // Display cancel icon when filtered
+                                ? 'assets/images/clear_filter.png' // Display cancel icon when filtered
                                 : 'assets/images/filter_icon.png', // Display filter icon when not filtered
                             height: 20,
                           ),

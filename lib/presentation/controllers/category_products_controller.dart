@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:optom_market/data/models/product_model.dart';
 import 'package:optom_market/data/datasources/http_service.dart';
+import 'package:optom_market/utility/LogServices.dart';
 
 class CategoryProductsController extends GetxController {
   final int categoryId;
@@ -12,19 +13,23 @@ class CategoryProductsController extends GetxController {
 
   @override
   void onInit() {
-    fetchProductsByCategory();
     super.onInit();
+    fetchProductsByCategory();
   }
+
 
   void fetchProductsByCategory() async {
     isLoading(true);
     try {
       final products = await _apiService.fetchProductsByCategory(categoryId);
-      productList.assignAll(products.items);
+      print('Fetched products: $products'); // Debug output
+      productList.assignAll(products);
     } catch (error) {
       print('Error fetching products for category $categoryId: $error');
     } finally {
       isLoading(false);
     }
   }
+
+
 }
